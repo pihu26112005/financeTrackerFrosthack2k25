@@ -6,3 +6,5 @@
 - https://python.langchain.com/docs/integrations/vectorstores/pathway/ --> pathway as vector store in langchain 
 - https://github.com/pathwaycom/llm-app/tree/main/examples/pipelines/unstructured_to_sql_on_the_fly --> pathway unstructured to structure query sql 
 - https://github.com/Stormbreakerr20/Pathway_InterIIT_13.0/tree/master/code/Rag_application --> pathway INTERIIT
+
+- https://drive.google.com/drive/folders/14cPcPF19g3LPGojMTRhoNCFTAx8sTV0a --> google drive link 
