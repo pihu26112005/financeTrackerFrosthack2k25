@@ -8,6 +8,9 @@ port = 8666
 client = PathwayVectorClient(host=host, port=port)
 
 
-query = "What is LuvSharma"
+query = "Who is piyush?"
 docs = client.similarity_search(query)
 print(docs)
+
+# d2 = client.get_input_files()
+# print(d2)
