@@ -20,22 +20,23 @@ gdrive = pw.io.gdrive.read(
 
 
 # Model parameters
-model_name = "BAAI/bge-small-en"
-model_kwargs = {"device": "cpu"}
-encode_kwargs = {"normalize_embeddings": True}
+# model_name = "BAAI/bge-small-en"
+# model_kwargs = {"device": "cpu"}
+# encode_kwargs = {"normalize_embeddings": True}
 
+# embeddings = HuggingFaceEmbeddings(
+#     model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+# )
+
+model_name = "sentence-transformers/all-mpnet-base-v2"
+model_kwargs = {'device': 'cpu'}
+encode_kwargs = {'normalize_embeddings': True}
 embeddings = HuggingFaceEmbeddings(
-    model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+    model_name=model_name,
+    model_kwargs=model_kwargs,
+    encode_kwargs=encode_kwargs
 )
 
-# model_name = "sentence-transformers/all-mpnet-base-v2"
-# model_kwargs = {'device': 'cpu'}
-# encode_kwargs = {'normalize_embeddings': False}
-# embeddings = HuggingFaceEmbeddings(
-#     model_name=model_name,
-#     model_kwargs=model_kwargs,
-#     encode_kwargs=encode_kwargs
-# )
 splitter = CharacterTextSplitter()
 
 parser = parsers.PypdfParser()
