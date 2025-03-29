@@ -15,7 +15,7 @@ local = pw.io.fs.read(
 
 gdrive = pw.io.gdrive.read(
     object_id="14cPcPF19g3LPGojMTRhoNCFTAx8sTV0a",
-    service_user_credentials_file="credentials.json"
+    service_user_credentials_file="../credentials.json"
 )
 
 
