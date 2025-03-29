@@ -1,18 +1,22 @@
 import pathway as pw
-import pathway.persistence
 from pathway.xpacks.llm.vector_store import VectorStoreServer
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+# from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from pathway.xpacks.llm import llms, parsers
 
 # Read data correctly
-data = pw.io.fs.read(
+local = pw.io.fs.read(
     "./data/",  # Pathway listens to this data folder
     format="binary",  # Change from 'binary' to 'text'
     # mode="streaming",
     with_metadata=True,
 )
-print("Raw Data:", data)
+
+gdrive = pw.io.gdrive.read(
+    object_id="14cPcPF19g3LPGojMTRhoNCFTAx8sTV0a",
+    service_user_credentials_file="credentials.json"
+)
 
 
 # Model parameters
@@ -42,7 +46,7 @@ port = 8666
 
 # Start vector store server
 server = VectorStoreServer.from_langchain_components(
-    data, embedder=embeddings, splitter=splitter, parser=parser
+    *[local, gdrive], embedder=embeddings, splitter=splitter, parser=parser
 
 )
 
