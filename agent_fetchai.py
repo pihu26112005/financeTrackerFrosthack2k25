@@ -40,8 +40,8 @@ InputReaderParseAgent = Agent(name="InputReaderAgent", seed="InputReaderAgent re
 
 # @InputReaderParseAgent.on_message(model=InputReaderAgentMessage)
 # @InputReaderParseAgent.on_query(model=InputReaderAgentMessage)
-@InputReaderParseAgent.on_rest_get("/rest/get",InputReaderAgentMessageResponse)
-async def input_reader_agent(ctx: Context ):
+@InputReaderParseAgent.on_rest_post("/nest/post",InputReaderAgentMessage,InputReaderAgentMessageResponse)
+async def input_reader_agent(ctx: Context, message: InputReaderAgentMessage) -> InputReaderAgentMessageResponse:
     """
     Handles the input reader agent's message.
 
@@ -52,10 +52,10 @@ async def input_reader_agent(ctx: Context ):
     """
     
     print("\n ------Parsing the input---------. \n")
-    ptd = process_pdfs("INFO/data")
-    ftd = process_all_files(ptd)
-    with open("INFO/processed_output.json", "w", encoding="utf-8") as outfile:
-        json.dump(ftd, outfile, indent=4)
+    ptd = process_pdfs("INFO/data",message.message)
+    ftd = process_all_files(ptd, message.message)
+    # with open("INFO/processed_output.json", "w", encoding="utf-8") as outfile:
+    #     json.dump(ftd, outfile, indent=4)
     print("\n ------Parsed the input successfully---------. \n")
     print(InputReaderParseAgent.address)
     

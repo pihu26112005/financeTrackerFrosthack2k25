@@ -1,5 +1,6 @@
 import json
 import re
+import os
 
 # Load JSON data
 with open("INFO/output.json", "r", encoding="utf-8") as file:
@@ -32,7 +33,7 @@ def extract_transactions(page_content):
 
     return transactions
 
-def process_all_files(info_data):
+def process_all_files(info_data,fileNAme):
     processed_data = {}
 
     for file_name, pages in info_data.items():
@@ -46,6 +47,29 @@ def process_all_files(info_data):
 
         transactions = extract_transactions(full_text[start_idx:])
         processed_data[file_name] = transactions
+
+    # with open("INFO/processed_output.json", "w", encoding="utf-8") as outfile:
+    #     json.dump(processed_data, outfile, indent=4)
+    output_file = "INFO/processed_output.json"
+
+    # Load existing data if the file exists
+    if os.path.exists(output_file):
+        with open(output_file, "r", encoding="utf-8") as infile:
+            try:
+                existing_data = json.load(infile)
+                if not isinstance(existing_data, dict):
+                    existing_data = {}  # Ensure it's a dictionary
+            except json.JSONDecodeError:
+                existing_data = {}  # Handle invalid JSON cases
+    else:
+        existing_data = {}
+
+    # Append new data to the existing dictionary
+    existing_data.update(processed_data)
+
+    # Write the updated data back to the file
+    with open(output_file, "w", encoding="utf-8") as outfile:
+        json.dump(existing_data, outfile, indent=4)
 
     return processed_data
 

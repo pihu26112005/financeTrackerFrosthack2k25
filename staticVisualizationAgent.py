@@ -52,7 +52,7 @@ def plot_balance_over_time(df):
     ax.set_ylabel("Balance")
     adjust_xticks(ax)
     fig.tight_layout()
-    fig.savefig("staticPlots/balance_over_time.png")
+    fig.savefig("INFO/staticPlots/balance_over_time.png")
 
 def plot_deposits_over_time(df):
     df_deposits = df.dropna(subset=['Deposit']).sort_values('Date')
@@ -63,7 +63,7 @@ def plot_deposits_over_time(df):
     ax.set_ylabel("Deposit Amount")
     adjust_xticks(ax)
     fig.tight_layout()
-    fig.savefig("staticPlots/deposits_over_time.png")
+    fig.savefig("INFO/staticPlots/deposits_over_time.png")
 
 def plot_transactions_per_day(df):
     df['TransactionCount'] = 1
@@ -75,7 +75,7 @@ def plot_transactions_per_day(df):
     ax.set_ylabel("Transaction Count")
     adjust_xticks(ax)
     fig.tight_layout()
-    fig.savefig("staticPlots/transactions_per_day.png")
+    fig.savefig("INFO/staticPlots/transactions_per_day.png")
 
 def plot_deposit_distribution(df):
     fig, ax = plt.subplots()
@@ -84,7 +84,7 @@ def plot_deposit_distribution(df):
     ax.set_xlabel("Deposit Amount")
     ax.set_ylabel("Frequency")
     fig.tight_layout()
-    fig.savefig("staticPlots/deposit_distribution.png")
+    fig.savefig("INFO/staticPlots/deposit_distribution.png")
 
 def plot_withdrawal_distribution(df):
     fig, ax = plt.subplots()
@@ -93,7 +93,7 @@ def plot_withdrawal_distribution(df):
     ax.set_xlabel("Withdrawal Amount")
     ax.set_ylabel("Frequency")
     fig.tight_layout()
-    fig.savefig("staticPlots/withdrawal_distribution.png")
+    fig.savefig("INFO/staticPlots/withdrawal_distribution.png")
 
 def plot_deposit_vs_withdrawal(df):
     filtered_df = df.dropna(subset=['Deposit', 'Withdrawal'])
@@ -103,7 +103,7 @@ def plot_deposit_vs_withdrawal(df):
     ax.set_xlabel("Deposit")
     ax.set_ylabel("Withdrawal")
     fig.tight_layout()
-    fig.savefig("staticPlots/deposit_vs_withdrawal.png")
+    fig.savefig("INFO/staticPlots/deposit_vs_withdrawal.png")
 
 def plot_cumulative_net(df):
     df_sorted = df.sort_values('Date')
@@ -115,7 +115,7 @@ def plot_cumulative_net(df):
     ax.set_ylabel("Cumulative Net Amount")
     adjust_xticks(ax)
     fig.tight_layout()
-    fig.savefig("staticPlots/cumulative_net.png")
+    fig.savefig("INFO/staticPlots/cumulative_net.png")
 
 def plot_balance_moving_average(df, window=3):
     df_sorted = df.sort_values('Date')
@@ -129,7 +129,7 @@ def plot_balance_moving_average(df, window=3):
     adjust_xticks(ax)
     ax.legend()
     fig.tight_layout()
-    fig.savefig("staticPlots/balance_moving_average.png")
+    fig.savefig("INFO/staticPlots/balance_moving_average.png")
 
 def plot_deposits_withdrawals_time_series(df):
     df_sorted = df.sort_values('Date')
@@ -142,7 +142,7 @@ def plot_deposits_withdrawals_time_series(df):
     adjust_xticks(ax)
     ax.legend()
     fig.tight_layout()
-    fig.savefig("staticPlots/deposits_withdrawals_time_series.png")
+    fig.savefig("INFO/staticPlots/deposits_withdrawals_time_series.png")
 
 def plot_transactions_by_file(df):
     file_counts = df['file'].value_counts().reset_index()
@@ -154,7 +154,7 @@ def plot_transactions_by_file(df):
     ax.set_ylabel("Number of Transactions")
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
     fig.tight_layout()
-    fig.savefig("staticPlots/transactions_by_file.png")
+    fig.savefig("INFO/staticPlots/transactions_by_file.png")
 
 def plot_boxplot_deposit_by_weekday(df):
     df['Weekday'] = df['Date'].dt.day_name()
@@ -165,7 +165,7 @@ def plot_boxplot_deposit_by_weekday(df):
     ax.set_ylabel("Deposit Amount")
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
     fig.tight_layout()
-    fig.savefig("staticPlots/boxplot_deposit_by_weekday.png")
+    fig.savefig("INFO/staticPlots/boxplot_deposit_by_weekday.png")
 
 def plot_daily_net_transactions(df):
     daily_net = df.groupby('Date')['Net'].sum().reset_index()
@@ -176,7 +176,7 @@ def plot_daily_net_transactions(df):
     ax.set_ylabel("Net Amount (Deposit - Withdrawal)")
     adjust_xticks(ax)
     fig.tight_layout()
-    fig.savefig("staticPlots/daily_net_transactions.png")
+    fig.savefig("INFO/staticPlots/daily_net_transactions.png")
 
 def plot_numeric_correlation_heatmap(df):
     numeric_df = df[['Deposit', 'Withdrawal', 'Balance', 'Net']].copy()
@@ -185,7 +185,7 @@ def plot_numeric_correlation_heatmap(df):
     sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f", ax=ax)
     ax.set_title("Correlation Heatmap of Financial Variables")
     fig.tight_layout()
-    fig.savefig("staticPlots/correlation_heatmap.png")
+    fig.savefig("INFO/staticPlots/correlation_heatmap.png")
 
 def main():
     json_file = "./INFO/processed_output.json"  # Ensure this file exists!
