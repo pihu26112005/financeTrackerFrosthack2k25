@@ -2,11 +2,14 @@ import pathway as pw
 from pathway.xpacks.llm.vector_store import VectorStoreServer
 from pathway.xpacks.llm import llms, parsers
 import os
-from langchain.document_loaders import PyPDFLoader
-# from langchain_community.document_loaders import PyPDFLoader
+# from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import CharacterTextSplitter
 # from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------
 # local = pw.io.fs.read(
@@ -16,8 +19,11 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 #     with_metadata=True,
 # )
 
+object_id = os.environ.get("GDRIVEFOLDERID")
+
+
 gdrive = pw.io.gdrive.read(
-    object_id=os.environ.get("GDRIVEFOLDERID"),
+    object_id=object_id,
     service_user_credentials_file="credentials.json",
     file_name_pattern="*.txt",
 )

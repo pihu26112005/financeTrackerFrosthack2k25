@@ -5,6 +5,8 @@ from langchain_huggingface import HuggingFaceEndpoint
 from dotenv import load_dotenv, find_dotenv
 import os
 import re
+from langchain_google_genai import ChatGoogleGenerativeAI
+
 
 load_dotenv(find_dotenv())
 os.environ['LANGCHAIN_TRACING_V2'] = 'true'
@@ -13,6 +15,7 @@ os.environ['LANGCHAIN_PROJECT'] = 'advanced-rag'
 os.environ['LANGCHAIN_API_KEY'] = os.getenv("LANGSMITH_API_KEY")
 os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
 os.environ["HUGGINGFACEHUB_API_TOKEN"] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+os.environ["GOOGLE_API_KEY"] = os.getenv("GEMINI_API_KEY")
 
 
 def CheckQuery(query):
@@ -37,9 +40,16 @@ def CheckQuery(query):
         temperature=0.7,
         max_length=200
     )
+#     model = ChatGoogleGenerativeAI(
+#     model="gemini-2.0-flash",
+#     temperature=0,
+#     timeout=None,
+#     max_retries=2,
+#     # other params...
+# )
 
     check_prompt = check_prompt_template.format(query=query)
-    response = model.invoke(check_prompt).strip() # Clean up response
+    response = model.invoke(check_prompt) # Clean up response
 
     print("LLM Response:", response)  # Debugging
     print("LLM Response:", response)  # Debugging
@@ -54,7 +64,7 @@ def CheckQuery(query):
 
     # Step 2: If "No", ask the model to answer the query directly
     answer_prompt_template = ChatPromptTemplate.from_messages([
-        ("system", "Answer user query in one or two line. You are his Financial helper"),
+        ("system", "Answer user query in one or two line"),
         ("user", "User Query: {query}")
     ])
 

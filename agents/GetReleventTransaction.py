@@ -9,6 +9,7 @@ import os
 import json
 import re
 from datetime import datetime
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 
 
@@ -19,6 +20,7 @@ os.environ['LANGCHAIN_PROJECT'] = 'advanced-rag'
 os.environ['LANGCHAIN_API_KEY'] = os.getenv("LANGSMITH_API_KEY")
 os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
 os.environ["HUGGINGFACEHUB_API_TOKEN"] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+os.environ["GOOGLE_API_KEY"] = os.getenv("GEMINI_API_KEY")
 
 
 # Function to get relevant transactions based on user query
@@ -58,12 +60,20 @@ def get_relevance(user_query: str) -> List[str]:
 
 
     
-    # model = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
+    model = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
     model = HuggingFaceEndpoint(
     repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1",  # ✅ Correct model
     temperature=0.7,
     max_length=200
     )
+
+    # model = ChatGoogleGenerativeAI(
+    # model="gemini-2.0-flash",
+    # temperature=0,
+    # timeout=None,
+    # max_retries=2,
+    # # other params...
+# )
     
     prompt = prompt_template.format(query=user_query)
     response = model.invoke(prompt)

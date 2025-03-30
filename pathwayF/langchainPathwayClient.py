@@ -371,7 +371,7 @@ workflow.add_conditional_edges(
     {
         "not supported": "generate",
         "useful": END,
-        "not useful": "transform_query",
+        "not useful": END,
     },
 )
 
