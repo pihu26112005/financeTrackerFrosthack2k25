@@ -30,7 +30,7 @@ client = PathwayVectorClient(host=host, port=port)
 retriever = client.as_retriever()
 
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 from langchain_groq import ChatGroq
 
 
@@ -366,10 +366,10 @@ workflow.add_conditional_edges(
 app = workflow.compile()
 
 
-inputs = {
-    "question": "Can I get the net amount of money I have paid to siddhant."
-}
+inputs = {}
 
-result = app.invoke(inputs)
-print(result["generation"])
-
+def run(query):
+    inputs["question"] = query  # Set query dynamically
+    result = app.invoke(inputs)
+    # print(result["generation"])
+    return result["generation"]

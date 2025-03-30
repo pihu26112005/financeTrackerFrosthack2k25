@@ -67,6 +67,14 @@ def chat_page():
         else:
             st.warning("Please enter a query before clicking the button.")
 
+    if st.button("Get vector answer"):
+        if query:
+            response = requests.post("http://0.0.0.0:8000/query", json={"message": query})
+            st.write(response.json())
+        else:
+            st.warning("Please enter a query before clicking the button.")
+    
+
 def search_page():
     """New Page for Searching"""
     st.header("🔍 Search Transactions")

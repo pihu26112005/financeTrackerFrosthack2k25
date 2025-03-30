@@ -5,6 +5,7 @@ from agents.DocumentParsingAgent2 import extract_transactions, process_all_files
 from agents.GetReleventTransaction import get_relevance, get_relevant_transactions
 from agents.GetUserQueryOutput import answerQuery
 from agents.GetReleventTransactionByDate import get_filtered_transactions
+from pathwayF.langchainPathwayClient import run
 
 #kis tarah ke message se trigger hoga 
 class InputReaderAgentMessage(Model):
@@ -38,6 +39,12 @@ class FetchReleventDocbydateAgentMessage(Model):
 class FetchReleventDocbydateAgentResponse(Model):
     filtered_transactions: list
 
+class QueryVectorStoreAgentMessage(Model):
+    message: str
+
+class QueryVectorStoreAgentMessageResponse(Model):
+    ans: str
+
 QueryAnswerAgent = Agent(name="QueryAnswerAgent", seed="QueryAnswerAgent recovery phrase", port=8000)
 
 ReleventDocumentAgent = Agent(name="ReleventDocumentAgent", seed="ReleventDocumentAgent recovery phrase", port=8000)
@@ -45,6 +52,25 @@ ReleventDocumentAgent = Agent(name="ReleventDocumentAgent", seed="ReleventDocume
 InputReaderParseAgent = Agent(name="InputReaderAgent", seed="InputReaderAgent recovery phrase", port=8000)
 
 FetchReleventDocbydateAgent = Agent(name="FetchReleventDocbydateAgent", seed="FetchReleventDocbydateAgent recovery phrase", port=8000)
+
+QueryVectorStoreAgent = Agent(name="QueryVectorStoreAgent", seed="QueryVectorStoreAgent recovery phrase", port=8000)
+
+@QueryVectorStoreAgent.on_rest_post("/query", QueryVectorStoreAgentMessage, QueryVectorStoreAgentMessageResponse)
+async def query_vector_store_agent(ctx: Context, message: QueryVectorStoreAgentMessage) -> QueryVectorStoreAgentMessageResponse:
+    """
+    Handles the query vector store agent's message.
+
+    Args:
+        context (Context): The context of the agent.
+        sender (str): The sender of the message.
+        message (QueryVectorStoreAgentMessage): The message from the query vector store agent.
+    """
+    
+    print("\n ------Getting relevant transactions---------. \n")
+    ans = run(message.message)
+    print("\n ------Got answer to the query successfully---------. \n")
+    return QueryVectorStoreAgentMessageResponse(ans=ans)
+
 
 
 @FetchReleventDocbydateAgent.on_rest_post("/search", FetchReleventDocbydateAgentMessage, FetchReleventDocbydateAgentResponse)
@@ -176,6 +202,7 @@ bureau.add(QueryAnswerAgent)
 bureau.add(InputReaderParseAgent)
 bureau.add(ReleventDocumentAgent)
 bureau.add(FetchReleventDocbydateAgent)
+bureau.add(QueryVectorStoreAgent)
 # bureau.add(DemoAgent)
 
 if __name__ == "__main__":
