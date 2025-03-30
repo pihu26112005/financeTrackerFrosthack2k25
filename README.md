@@ -1,94 +1,100 @@
-# Finance Tracker - FrostHack 2025
+# Finance Tracker - AI-powered Financial Analysis
 
-This repository contains a financial transaction analysis system that processes, parses, and analyzes transaction data using AI agents. It integrates multiple components, including document parsing, retrieval-augmented generation (RAG), and visualization.
+## Overview
+This project is an AI-powered financial analysis system that processes and analyzes transaction data to provide insights and answer user queries. It integrates LangChain, Fetch.ai, and Pathway for efficient data processing and retrieval.
 
-## 📂 Project Structure
+## Features
+- Parses and extracts financial transactions from documents.
+- Stores structured financial data for quick retrieval.
+- Provides financial insights based on user queries.
+- Implements advanced retrieval-augmented generation (RAG) techniques.
+- Uses Fetch.ai and Pathway for efficient data processing.
+- Supports visualization of financial data trends.
 
+## Project Structure
 ```
 ├── aazold
-│   ├── adaptive_rag.py  # RAG-based processing
-│   ├── app.yaml         # App configuration
-│   ├── data            # Sample data
+│   ├── adaptive_rag.py
+│   ├── app.yaml
+│   ├── data
+│   │   ├── x.txt
+│   │   ├── y.txt
+│   │   └── z.txt
 │   └── rag-app
-│       └── app.py      # RAG application
-├── agent_fetchai.py     # Main agent controller
+│       └── app.py
+├── agent_fetchai.py
 ├── agents
-│   ├── DocToGDrive.py  # Upload documents to Google Drive
-│   ├── DocumentParsingAgent.py  # Parses documents
-│   ├── GetReleventTransaction.py  # Extracts relevant transactions
-│   ├── GetUserQueryOutput.py  # Generates response from transaction data
-│   ├── IsContextNeeded.py  # Checks if context is required
-├── app.py               # Entry point for the API
-├── Cache                # Stores cached results
-├── data                 # Contains transaction datasets
-├── INFO                 # Processed financial documents and reports
-├── LanggraphApp.py      # LangChain-based application
-├── output_chunks        # Chunked transaction data for processing
-├── pathwayF             # Pathway AI integration
-├── staticVisualizationAgent.py # Generates static plots
-├── README.md            # Project documentation
-├── requirements.txt     # Dependencies list
+│   ├── DocToGDrive.py
+│   ├── DocumentParsingAgent2.py
+│   ├── DocumentParsingAgent.py
+│   ├── GetReleventTransactionByDate.py
+│   ├── GetReleventTransaction.py
+│   ├── GetUserQueryOutput.py
+│   ├── IsContextNeeded.py
+│   └── __pycache__
+├── app.py
+├── Cache
+│   ├── 1-0-0
+│   └── 1-0-1
+├── credentials.json
+├── data
+│   └── finance_docs_extracted.csv
+├── INFO
+│   ├── data
+│   ├── filtered_transactions.json
+│   ├── output.json
+│   ├── processed_output.json
+│   ├── staticPlots
+├── LanggraphApp.py
+├── output_chunks
+├── pathwayF
+│   ├── baseModel.py
+│   ├── langchainPathwayClient.py
+│   ├── pathwayServer.py
+│   ├── pdfToCSVByLLM.py
+│   └── __pycache__
+├── README.md
+├── requirements.txt
+└── staticVisualizationAgent.py
 ```
 
-## 🚀 Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-repo/financeTrackerFrosthack2k25.git
+## Installation
+1. Clone the repository:
+   ```sh
+   git clone <repository-url>
    cd financeTrackerFrosthack2k25
    ```
-
-2. **Create a virtual environment** (Optional but recommended)
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-   ```bash
+2. Install dependencies:
+   ```sh
    pip install -r requirements.txt
    ```
+3. Set up credentials (e.g., Fetch.ai API keys, database configurations) in `credentials.json`.
 
-## 🏃 Running the Application
+## Running the Application
+### Step 1: Start the Backend
+```sh
+python app.py
+```
+### Step 2: Run Supporting Agents
+Run the required agents in separate terminals:
+```sh
+python agents/GetUserQueryOutput.py
+python agents/GetReleventTransaction.py
+```
+### Step 3: Query the System
+Use the API to fetch transaction insights:
+```sh
+curl -X POST "http://localhost:8000/query" -H "Content-Type: application/json" -d '{"query": "What was my highest deposit in January 2025?"}'
+```
 
-1. **Start the API**
-   ```bash
-   uvicorn app:app --reload
-   ```
-   This will start the FastAPI server on `http://127.0.0.1:8000`.
+## Relevant Resources
+- [FetchAi with LangChain](https://fetch.ai/docs/examples/rag/langchain-rag)
+- [Pathway with LangChain](https://pathway.com/blog/langchain-integration)
+- [Pathway Adaptive RAG with LangGraph](https://github.com/pathwaycom/llm-app/blob/main/cookbooks/self-rag-agents/pathway_langgraph_agentic_rag.ipynb)
+- [Pathway as a Vector Store in LangChain](https://python.langchain.com/docs/integrations/vectorstores/pathway/)
+- [Pathway Unstructured to Structured SQL Queries](https://github.com/pathwaycom/llm-app/tree/main/examples/pipelines/unstructured_to_sql_on_the_fly)
+- [Pathway INTERIIT Project](https://github.com/Stormbreakerr20/Pathway_InterIIT_13.0/tree/master/code/Rag_application)
+- [Google Drive with Additional Files](https://drive.google.com/drive/folders/14cPcPF19g3LPGojMTRhoNCFTAx8sTV0a)
 
-2. **Run the AI Agents**
-   ```bash
-   python agent_fetchai.py
-   ```
-
-3. **Using the RAG-based Query System**
-   ```bash
-   python aazold/rag-app/app.py
-   ```
-
-## 📊 Features
-
-- Extracts transactions from PDFs
-- Uses Retrieval-Augmented Generation (RAG) for intelligent query responses
-- Visualizes financial trends with static plots
-- Supports LangChain and Pathway AI for advanced document processing
-
-## 🛠️ Configuration
-- Place financial documents in `INFO/data/`
-- Update `credentials.json` for authentication (if required)
-
-## 📞 Support
-For issues or questions, feel free to open an issue or contact the project maintainers.
-
-Happy coding! 🚀
-
-
-- https://fetch.ai/docs/examples/rag/langchain-rag --> FetchAi with Langchain
-- https://pathway.com/blog/langchain-integration --> pathway with langchain 
-- https://github.com/pathwaycom/llm-app/blob/main/cookbooks/self-rag-agents/pathway_langgraph_agentic_rag.ipynb --> pathway adaptic rag with langgraph 
-- https://python.langchain.com/docs/integrations/vectorstores/pathway/ --> pathway as vector store in langchain 
-- https://github.com/pathwaycom/llm-app/tree/main/examples/pipelines/unstructured_to_sql_on_the_fly --> pathway unstructured to structure query sql 
-- https://github.com/Stormbreakerr20/Pathway_InterIIT_13.0/tree/master/code/Rag_application --> pathway INTERIIT
-
-- https://drive.google.com/drive/folders/14cPcPF19g3LPGojMTRhoNCFTAx8sTV0a --> google drive link 
+## Contributing
+Feel free to open issues and submit pull requests for improvements.
