@@ -49,6 +49,15 @@ This project is an AI-powered financial analysis system that processes and analy
 └── staticVisualizationAgent.py
 ```
 
+## App Diagrams
+
+### Project Diagram
+![alt text](https://github.com/mrhello291/financeTrackerFrosthack2k25/blob/main/app-diagram.png?raw=true)
+
+### Fetch-AI Agent Diagram
+![alt text](https://github.com/mrhello291/financeTrackerFrosthack2k25/blob/main/agent-diagram.png?raw=true)
+
+
 ## Installation
 
 ### 1. Set Environment Variables
