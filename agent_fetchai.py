@@ -10,27 +10,38 @@ from agents.GetUserQueryOutput import answerQuery
 class InputReaderAgentMessage(Model):
     message: str
 
-class ReleventDocumentAgentMessage(Model):
-    message: str
-    query : str
-    ftd : list
+class InputReaderAgentMessageResponse(Model):
+    ftd: dict
 
-class QueryAnswerAgentMessage(Model):
-    message: str
-    query : str
+class ReleventDocumentAgentMessage(Model):
+    # message: str
+    message : str
+    # ftd : dict
+
+class ReleventDocumentAgentResponse(Model):
     fld : list
 
 
+class QueryAnswerAgentMessage(Model):
+    message: str
+    # query : str
+    # fld : dict
+
+class QueryAnswerAgentMessageResponse(Model):
+    ans: str
+
+QueryAnswerAgent = Agent(name="QueryAnswerAgent", seed="QueryAnswerAgent recovery phrase", port=8000)
+
+ReleventDocumentAgent = Agent(name="ReleventDocumentAgent", seed="ReleventDocumentAgent recovery phrase", port=8000)
+
 InputReaderParseAgent = Agent(name="InputReaderAgent", seed="InputReaderAgent recovery phrase", port=8000)
 
-# ReleventDocumentAgent = Agent(name="ReleventDocumentAgent", seed="ReleventDocumentAgent recovery phrase", port=8000)
-
-# QueryAnswerAgent = Agent(name="QueryAnswerAgent", seed="QueryAnswerAgent recovery phrase", port=8000)
 
 
 # @InputReaderParseAgent.on_message(model=InputReaderAgentMessage)
-@InputReaderParseAgent.on_query(model=InputReaderAgentMessage)
-async def input_reader_agent(ctx: Context,sender: str , message: InputReaderAgentMessage):
+# @InputReaderParseAgent.on_query(model=InputReaderAgentMessage)
+@InputReaderParseAgent.on_rest_get("/rest/get",InputReaderAgentMessageResponse)
+async def input_reader_agent(ctx: Context ):
     """
     Handles the input reader agent's message.
 
@@ -48,49 +59,73 @@ async def input_reader_agent(ctx: Context,sender: str , message: InputReaderAgen
     print("\n ------Parsed the input successfully---------. \n")
     print(InputReaderParseAgent.address)
     
-    await ctx.send(sender, ftd)
+    # await ctx.send(sender, ftd)
+    return InputReaderAgentMessageResponse(ftd=ftd)
 
 
 
 # @ReleventDocumentAgent.on_message(model=ReleventDocumentAgentMessage)
-# async def relevent_document_agent(ctx: Context, sender: str , message: ReleventDocumentAgentMessage):
-#     """
-#     Handles the relevant document agent's message.
+# @ReleventDocumentAgent.on_query(model=ReleventDocumentAgentMessage)
+@ReleventDocumentAgent.on_rest_post("/rest/post", ReleventDocumentAgentMessage, ReleventDocumentAgentResponse)
+async def relevent_document_agent(ctx: Context , message: ReleventDocumentAgentMessage)-> ReleventDocumentAgentResponse:
+    """
+    Handles the relevant document agent's message.
 
-#     Args:
-#         context (Context): The context of the agent.
-#         sender (str): The sender of the message.
-#         message (InputReaderAgentMessage): The message from the relevant document agent.
-#     """
-    
-#     print("\n ------Getting relevant transactions---------. \n")
-#     flq = get_relevance(message.query)
-#     fld = get_relevant_transactions(flq, message.ftd)
-#     print("\n ------Got relevant transactions successfully---------. \n")
-    
-#     await ctx.send(sender, fld)
+    Args:
+        context (Context): The context of the agent.
+        sender (str): The sender of the message.
+        message (InputReaderAgentMessage): The message from the relevant document agent.
+    """
+    # print(ReleventDocumentAgent.address)
+    print("\n ------Getting relevant transactions---------. \n")
+    with open("INFO/processed_output.json", "r") as file:
+        ftd2 = json.load(file)
 
+    print("\n ------Getting relevant transactions---------. \n")
+    flq = get_relevance(message.message)
+    # fld = get_relevant_transactions(flq, message.ftd)
+    fld = get_relevant_transactions(flq,ftd2)
+    print("\n ------Got relevant transactions successfully---------. \n")
+    with open("INFO/filtered_transactions.json", "w") as file:
+            json.dump(fld, file, indent=4)
+    
+    # await ctx.send(sender, fld)
+    return ReleventDocumentAgentResponse(fld=fld)
 
 
 # @QueryAnswerAgent.on_message(model=QueryAnswerAgentMessage)
-# async def query_answer_agent(ctx: Context, sender: str , message: QueryAnswerAgentMessage):
-#     """
-#     Handles the query answer agent's message.
+# @QueryAnswerAgent.on_query(model=QueryAnswerAgentMessage, replies={QueryAnswerAgentMessageResponse})
+@QueryAnswerAgent.on_rest_post("/pest/post", QueryAnswerAgentMessage, QueryAnswerAgentMessageResponse)
+async def query_answer_agent(ctx: Context , message: QueryAnswerAgentMessage) -> QueryAnswerAgentMessageResponse:
+    """
+    Handles the query answer agent's message.
 
-#     Args:
-#         context (Context): The context of the agent.
-#         sender (str): The sender of the message.
-#         message (InputReaderAgentMessage): The message from the query answer agent.
-#     """
+    Args:
+        context (Context): The context of the agent.
+        sender (str): The sender of the message.
+        message (InputReaderAgentMessage): The message from the query answer agent.
+    """
     
-#     print("\n ------Getting answer to the query---------. \n")
-#     ans = answerQuery(message.query,message.fld)
-#     print("\n ------Got answer to the query successfully---------. \n")
+    print("\n ------Getting relevant transactions---------. \n")
+    fld2= {}
+    with open("INFO/filtered_transactions.json", "r") as file:
+        fld2 = json.load(file)
+    print("\n ------Getting answer to the query---------. \n")
+    ans = answerQuery(message.message, fld2)
+    print("\n ------Got answer to the query successfully---------. \n")
     
-#     await ctx.send(sender, ans)
+    # await ctx.send(sender, ans)
+    return QueryAnswerAgentMessageResponse(ans=ans)
 
 
 # ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# database = {}
+# with open("INFO/processed_output.json", "r") as file:
+#         database = json.load(file)
+# filtereDdatabase = {}
+# with open("INFO/processed_output.json", "r") as file:
+#         filtereDdatabase = json.load(file)
 
 # demo agent who calls input_reader_agent 
 # class DemoAgentMessage(Model):
@@ -107,12 +142,16 @@ async def input_reader_agent(ctx: Context,sender: str , message: InputReaderAgen
 #         context (Context): The context of the agent.
 #     """
 #     print("Demo agent started.")
-#     await ctx.send(InputReaderParseAgent.address, InputReaderAgentMessage(message="Demo agent called me , i am starting the input reader agent"))
+#     await ctx.send(QueryAnswerAgent.address, QueryAnswerAgentMessage(message="demo", query="What i do between 1 feb and 10 feb", fld=filtereDdatabase))
 
-# bureau = Bureau()
-# bureau.add(InputReaderParseAgent)
+bureau = Bureau()
+bureau.add(QueryAnswerAgent)
+bureau.add(InputReaderParseAgent)
+bureau.add(ReleventDocumentAgent)
 # bureau.add(DemoAgent)
 
 if __name__ == "__main__":
-    # bureau.run()
-    InputReaderParseAgent.run()
+    bureau.run()
+    # InputReaderParseAgent.run()
+    # ReleventDocumentAgent.run()
+    # QueryAnswerAgent.run()

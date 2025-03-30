@@ -87,8 +87,6 @@ def get_relevant_transactions(result,database):
     else:
         raise ValueError("No valid JSON found in result")
 
-
-
     # with open("INFO/processed_output.json", "r") as file:
     #     database = json.load(file)
 
@@ -108,6 +106,7 @@ def get_relevant_transactions(result,database):
         ]
         # print("Filtered Transactions:", json.dumps(filtered_transactions, indent=4))
         return filtered_transactions
+        # return json.dumps(filtered_transactions, indent=4)
     
         # output_file = "INFO/filtered_transactions.json"
         # with open(output_file, "w") as file:
