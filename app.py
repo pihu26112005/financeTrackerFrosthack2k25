@@ -155,7 +155,80 @@ def chat_page():
                 response = requests.post("http://0.0.0.0:8000/pest/post", json={"message": query})
                 # response2 = requests.post("http://0.0.0.0:8000/query", json={"message": query})
                 # st.write(response2.json())
+                # st.write(response0.json())
                 st.write(response.json())
+
+                response_data = response0.json()
+
+                 # Extract the "fld" field containing the transaction data
+                if "fld" in response_data:
+                    transactions = response_data["fld"]
+                else:
+                    st.error("Invalid response format: Missing 'fld' key.")
+                    return
+                
+                # Convert extracted list to DataFrame
+                df = pd.DataFrame(transactions)
+
+                # Convert Date column to datetime format
+                df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
+
+                # Fill missing values in Deposit and Withdrawal with 0
+                df["Deposit"] = df["Deposit"].fillna(0)
+                df["Withdrawal"] = df["Withdrawal"].fillna(0)
+
+                # Sort by date
+                df = df.sort_values(by="Date")
+
+                # ----- STEP 2: User Inputs for Filtering -----
+                st.sidebar.header("Filter Options")
+
+                # Date range filter
+                min_date = df['Date'].min()
+                max_date = df['Date'].max()
+                start_date = st.sidebar.date_input("Start Date", value=min_date)
+                end_date = st.sidebar.date_input("End Date", value=max_date)
+
+                # Filter DataFrame by selected dates
+                filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date))]
+
+                # ----- STEP 3: Display Filtered Data -----
+                st.write("### Filtered Transactions")
+                st.dataframe(filtered_df)
+
+                # ----- STEP 4: Create Interactive Graphs -----
+                if filtered_df.empty:
+                    st.warning("No transactions available for the selected filters.")
+                else:
+                    # Graph 1: Balance Over Time
+                    fig_balance = px.line(
+                        filtered_df, 
+                        x='Date', y='Balance',
+                        title="Balance Over Time",
+                        markers=True,
+                        labels={'Date': 'Date', 'Balance': 'Account Balance'}
+                    )
+                    st.plotly_chart(fig_balance, use_container_width=True)
+
+                    # Graph 2: Deposits Over Time (Bar Chart)
+                    fig_deposits = px.bar(
+                        filtered_df, 
+                        x='Date', y='Deposit',
+                        title="Deposits Over Time",
+                        labels={'Deposit': 'Deposit Amount'}
+                    )
+                    st.plotly_chart(fig_deposits, use_container_width=True)
+
+                    # Graph 3: Deposits vs Withdrawals Over Time
+                    fig_du = px.bar(
+                        filtered_df,
+                        x='Date',
+                        y=['Deposit', 'Withdrawal'],
+                        barmode='group',
+                        title="Deposits vs Withdrawals Over Time",
+                        labels={'value': 'Amount', 'variable': 'Transaction Type'}
+                    )
+                    st.plotly_chart(fig_du, use_container_width=True)
             else:
                 st.write(answer)
         else:
