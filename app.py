@@ -46,8 +46,22 @@ def query_page():
         else:
             st.warning("Please enter a query before clicking the button.")
 
+    # if st.button("Get Answer"):
+    #     if query:
+    #         response = requests.post("http://0.0.0.0:8000/pest/post", json={"message": query})
+    #         st.write(response.json())
+    #     else:
+    #         st.warning("Please enter a query before clicking the button.")
+
+def chat_page():
+    """Page for chatting with the model"""
+    st.title("chat with model")
+
+    query = st.text_input("Enter your query")
+
     if st.button("Get Answer"):
         if query:
+            response0 = requests.post("http://0.0.0.0:8000/rest/post", json={"message": query})
             response = requests.post("http://0.0.0.0:8000/pest/post", json={"message": query})
             st.write(response.json())
         else:
@@ -74,7 +88,7 @@ def search_page():
 def main():
     """Main function to handle navigation with sidebar"""
     st.sidebar.title("🔗 Navigation")
-    page = st.sidebar.radio("Go to", ["📂 Upload File", "🔎 Query Transactions", "🔍 Search"])
+    page = st.sidebar.radio("Go to", ["📂 Upload File", "🔎 Query Transactions","💬 Chat" ,"🔍 Search"])
 
     if page == "📂 Upload File":
         upload_page()
@@ -82,6 +96,9 @@ def main():
         query_page()
     elif page == "🔍 Search":
         search_page()
+    elif page == "💬 Chat":
+        chat_page()
+
 
 if __name__ == "__main__":
     main()
