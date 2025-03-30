@@ -59,33 +59,66 @@ This project is an AI-powered financial analysis system that processes and analy
 ```
 
 ## Installation
-1. Clone the repository:
-   ```sh
-   git clone <repository-url>
-   cd financeTrackerFrosthack2k25
-   ```
-2. Install dependencies:
-   ```sh
-   pip install -r requirements.txt
-   ```
-3. Set up credentials (e.g., Fetch.ai API keys, database configurations) in `credentials.json`.
+
+### 1. Set Environment Variables
+Before running the application, configure the following environment variables:
+```bash
+export PATHWAY_KEY=""
+export LANGSMITH_TRACING=true
+export LANGSMITH_ENDPOINT="https://api.smith.langchain.com"
+export LANGSMITH_API_KEY=""
+export LANGSMITH_PROJECT=""
+export GEMINI_API_KEY="--"
+export GROQ_API_KEY=""
+export TAVILY_API_KEY=""
+export DEEPSEEK_API_KEY=""
+export HUGGINGFACEHUB_API_TOKEN=""
+export GDRIVEFOLDERID=""
+```
+
+### 2. Set Up `credentials.json`
+Create a `credentials.json` file in the root directory and populate it with your Google Cloud credentials:
+```json
+{
+  "type": "service_account",
+  "project_id": "rag-app-frosthack",
+  "private_key_id": "<PRIVATE_KEY_ID>",
+  "private_key": "-----BEGIN PRIVATE KEY-----\n<PRIVATE_KEY>\n-----END PRIVATE KEY-----\n",
+  "client_email": "<CLIENT_EMAIL>",
+  "client_id": "<CLIENT_ID>",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/<SERVICE_ACCOUNT>.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+```
+_Note: Replace `<PRIVATE_KEY>`, `<CLIENT_EMAIL>`, `<CLIENT_ID>`, and `<SERVICE_ACCOUNT>` with your actual credentials._
+
+### 3. Install Dependencies
+Run the following command to install required dependencies:
+```bash
+pip install -r requirements.txt
+```
 
 ## Running the Application
-### Step 1: Start the Backend
-```sh
-python app.py
-```
-### Step 2: Run Supporting Agents
-Run the required agents in separate terminals:
-```sh
-python agents/GetUserQueryOutput.py
-python agents/GetReleventTransaction.py
-```
-### Step 3: Query the System
-Use the API to fetch transaction insights:
-```sh
-curl -X POST "http://localhost:8000/query" -H "Content-Type: application/json" -d '{"query": "What was my highest deposit in January 2025?"}'
-```
+Follow these steps to start the application:
+
+1. **Start the Pathway Vector Store Server**
+   ```bash
+   python3 pathwayF/pathwayServer.py e
+   ```
+
+2. **Start the Fetch.AI Agent**
+   ```bash
+   python3 agent_fetchai.py
+   ```
+
+3. **Run the Streamlit App**
+   ```bash
+   streamlit run app.py
+   ```
+
 
 ## Relevant Resources
 - [FetchAi with LangChain](https://fetch.ai/docs/examples/rag/langchain-rag)
