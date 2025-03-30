@@ -1,7 +1,0 @@
-TransactionID,Date,Category,Amount,Description
-1,2025-february-03,Groceries,110.00,Supermarket purchase
-2,2025-february-10,Utilities,80.00,Water bill
-3,2025-february-14,Entertainment,45.00,Concert tickets
-4,2025-february-20,Transportation,25.00,Bus fare
-5,2025-february-24,Food,42.50,Lunch at cafe
-6,2025-february-28,Shopping,180.00,Clothing store

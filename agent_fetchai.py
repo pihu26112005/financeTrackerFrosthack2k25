@@ -7,6 +7,7 @@ from agents.GetUserQueryOutput import answerQuery
 from agents.GetReleventTransactionByDate import get_filtered_transactions
 from agents.IsContextNeeded import CheckQuery
 from pathwayF.langchainPathwayClient import run
+from agents.DocToGDrive import grivePipe
 
 #kis tarah ke message se trigger hoga 
 class InputReaderAgentMessage(Model):
@@ -133,6 +134,7 @@ async def input_reader_agent(ctx: Context, message: InputReaderAgentMessage) -> 
     print("\n ------Parsing the input---------. \n")
     ptd = process_pdfs("INFO/data",message.message)
     ftd = process_all_files(ptd, message.message)
+    grivePipe()
     # with open("INFO/processed_output.json", "w", encoding="utf-8") as outfile:
     #     json.dump(ftd, outfile, indent=4)
     print("\n ------Parsed the input successfully---------. \n")
