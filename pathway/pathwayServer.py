@@ -21,6 +21,16 @@ from langchain_huggingface import HuggingFaceEmbeddings
 #     service_user_credentials_file="../credentials.json"
 # )
 
+files = gdrive
+
+unStructureParser = parsers.UnstructuredParser()
+unstructured_documents = files.select(texts=unStructureParser(pw.this.data))
+unstructured_documents = unstructured_documents.select(texts=strip_metadata(pw.this.texts))
+
+prompt = unstructured_documents.select(prompt=build_prompt_structure(pw.this.texts))
+
+
+
 
 # model_name = "BAAI/bge-small-en"
 # model_kwargs = {"device": "cpu"}
