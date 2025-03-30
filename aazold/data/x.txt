@@ -1,0 +1,7 @@
+TransactionID,Date,Category,Amount,Description
+1,2025-january-05,Groceries,120.75,Supermarket purchase
+2,2025-january-12,Utilities,95.00,Electricity bill
+3,2025-january-18,Entertainment,60.00,Movie tickets
+4,2025-january-22,Transportation,30.00,Taxi fare
+5,2025-january-28,Food,50.00,Dinner at restaurant
+6,2025-january-30,Shopping,200.00,Online purchase

@@ -1,0 +1,65 @@
+[
+    {
+        "Date": "03-03-2025",
+        "Particulars": "UPI/DR/506296667465/SIDDHA NT /SBIN/**AH469@OKSBI/UPI//SBI CFD7020D8B724129AA8E3933 C496192F/03/03/2025 18:40:47",
+        "Deposit": 20.0,
+        "Withdrawal": null,
+        "Balance": 11401.98
+    },
+    {
+        "Date": "03-03-2025",
+        "Particulars": "UPI/DR/506265632623/HIMACH AL /INDB/**05637@INDUS/UPI//AXI CABA59E5FB004A1CA109219D A86286C3/03/03/2025 21:39:38",
+        "Deposit": 145.0,
+        "Withdrawal": null,
+        "Balance": 11256.98
+    },
+    {
+        "Date": "03-03-2025",
+        "Particulars": "UPI/DR/506208520095/HIMACH AL /INDB/**05637@INDUS/UPI//SBI 3A6785D5EC4F4421B0DC11959 720EDFE/03/03/2025 21:40:18",
+        "Deposit": 10.0,
+        "Withdrawal": null,
+        "Balance": 11246.98
+    },
+    {
+        "Date": "03-03-2025",
+        "Particulars": "UPI/CR/362113720625/GOOGLE IN/UTIB/**MENTS@AXISBANK/ UPI//AXI1A430BFA66E4457FA9 FFAC59012D05F8/03/03/2025 22:38:48",
+        "Deposit": 3.0,
+        "Withdrawal": null,
+        "Balance": 11249.98
+    },
+    {
+        "Date": "03-03-2025",
+        "Particulars": "UPI/DR/506213407616/BIRI SIN/SBIN/**67743@OKHDFCBA NK/UPI//SBI4DA730003443425B B61D17D6003C85CF/03/03/202 5 23:53:56",
+        "Deposit": 50.0,
+        "Withdrawal": null,
+        "Balance": 11199.98
+    },
+    {
+        "Date": "04-03-2025",
+        "Particulars": "UPI/DR/542910716313/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 8EB62A37C36049A9BA42CC7E 387B854A/04/03/2025 20:35:37",
+        "Deposit": 100.0,
+        "Withdrawal": null,
+        "Balance": 11099.98
+    },
+    {
+        "Date": "05-03-2025",
+        "Particulars": "UPI/DR/543082190478/SIDDHA NT /SBIN/**AH469@OKSBI/UPI//AXI 5D9CDDBE985741719BFD22DF 0750628C/05/03/2025 17:59:26",
+        "Deposit": 20.0,
+        "Withdrawal": null,
+        "Balance": 11079.98
+    },
+    {
+        "Date": "05-03-2025",
+        "Particulars": "UPI/DR/543090583856/SIDDHA NT /SBIN/**AH469@OKSBI/UPI//AXI 86A7E3776DE74BFB983E466F8 13DF131/05/03/2025 18:26:50",
+        "Deposit": 20.0,
+        "Withdrawal": null,
+        "Balance": 11059.98
+    },
+    {
+        "Date": "05-03-2025",
+        "Particulars": "UPI/DR/506470706638/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 76C7E55EE86649DBA80F8DC8 88E1C8F7/05/03/2025 20:56:51",
+        "Deposit": 125.0,
+        "Withdrawal": null,
+        "Balance": 10934.98
+    }
+]
