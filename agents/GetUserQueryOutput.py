@@ -26,7 +26,7 @@ def answerQuery(user_query, filtered_transactions):
     prompt_template = ChatPromptTemplate.from_messages([
         ("system", "You are analyzing a list of financial transactions. Each transaction contains Date, Particulars, Deposit, Withdrawal, and Balance. "
                 "Answer the user's question based on the given transactions. Respond accurately based only on the provided data."),
-        ("user", "Transactions Data:\n{transactions}\n\nUser Query: {query}")
+        ("user", "Transactions Data:\n{transactions}\n\nUser Query: {query}"),
     ])
 
 

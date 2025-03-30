@@ -6,7 +6,7 @@ from agents.GetReleventTransaction import get_relevance, get_relevant_transactio
 from agents.GetUserQueryOutput import answerQuery
 from agents.GetReleventTransactionByDate import get_filtered_transactions
 from agents.IsContextNeeded import CheckQuery
-# from pathwayF.langchainPathwayClient import run
+from pathwayF.langchainPathwayClient import run
 
 #kis tarah ke message se trigger hoga 
 class InputReaderAgentMessage(Model):
@@ -62,23 +62,23 @@ FetchReleventDocbydateAgent = Agent(name="FetchReleventDocbydateAgent", seed="Fe
 
 IsContextNeededAgent = Agent(name="IsContextNeededAgent", seed="IsContextNeededAgent recovery phrase", port=8000)
 
-# QueryVectorStoreAgent = Agent(name="QueryVectorStoreAgent", seed="QueryVectorStoreAgent recovery phrase", port=8000)
+QueryVectorStoreAgent = Agent(name="QueryVectorStoreAgent", seed="QueryVectorStoreAgent recovery phrase", port=8000)
 
-# @QueryVectorStoreAgent.on_rest_post("/query", QueryVectorStoreAgentMessage, QueryVectorStoreAgentMessageResponse)
-# async def query_vector_store_agent(ctx: Context, message: QueryVectorStoreAgentMessage) -> QueryVectorStoreAgentMessageResponse:
-#     """
-#     Handles the query vector store agent's message.
+@QueryVectorStoreAgent.on_rest_post("/query", QueryVectorStoreAgentMessage, QueryVectorStoreAgentMessageResponse)
+async def query_vector_store_agent(ctx: Context, message: QueryVectorStoreAgentMessage) -> QueryVectorStoreAgentMessageResponse:
+    """
+    Handles the query vector store agent's message.
 
-#     Args:
-#         context (Context): The context of the agent.
-#         sender (str): The sender of the message.
-#         message (QueryVectorStoreAgentMessage): The message from the query vector store agent.
-#     """
+    Args:
+        context (Context): The context of the agent.
+        sender (str): The sender of the message.
+        message (QueryVectorStoreAgentMessage): The message from the query vector store agent.
+    """
     
-#     print("\n ------Getting relevant transactions---------. \n")
-#     ans = run(message.message)
-#     print("\n ------Got answer to the query successfully---------. \n")
-#     return QueryVectorStoreAgentMessageResponse(ans=ans)
+    print("\n ------Getting relevant transactions---------. \n")
+    ans = run(message.message)
+    print("\n ------Got answer to the query successfully---------. \n")
+    return QueryVectorStoreAgentMessageResponse(ans=ans)
 
 
 
@@ -229,7 +229,7 @@ bureau.add(InputReaderParseAgent)
 bureau.add(ReleventDocumentAgent)
 bureau.add(FetchReleventDocbydateAgent)
 bureau.add(IsContextNeededAgent)
-# bureau.add(QueryVectorStoreAgent)
+bureau.add(QueryVectorStoreAgent)
 # bureau.add(DemoAgent)
 
 if __name__ == "__main__":

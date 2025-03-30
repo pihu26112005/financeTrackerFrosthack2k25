@@ -5,8 +5,7 @@ os.environ['LANGCHAIN_TRACING_V2'] = os.getenv("LANGSMITH_TRACING")
 os.environ['LANGCHAIN_ENDPOINT'] = os.getenv("LANGSMITH_ENDPOINT")
 os.environ['LANGCHAIN_PROJECT'] = os.getenv("LANGSMITH_PROJECT")
 os.environ['LANGCHAIN_API_KEY'] = os.getenv("LANGSMITH_API_KEY")
-os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
-os.environ['LLM_API_KEY'] = os.getenv("DEEPSEEK_API_KEY")
+os.environ["GOOGLE_API_KEY"] = os.getenv("GEMINI_API_KEY")
 
 
 host = "127.0.0.1"
@@ -31,7 +30,8 @@ retriever = client.as_retriever()
 
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
-from langchain_groq import ChatGroq
+# from langchain_huggingface import HuggingFaceEndpoint
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 
 # Data model
@@ -44,7 +44,20 @@ class GradeDocuments(BaseModel):
 
 
 # LLM with function call
-llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+# llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+# llm = HuggingFaceEndpoint(
+#     repo_id="sshleifer/distilbart-cnn-12-6",  # ✅ Correct model
+#     temperature=0.7,
+#     max_length=200
+# )
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash",
+    temperature=0,
+    timeout=None,
+    max_retries=2,
+    # other params...
+)
+
 structured_llm_grader_docs = llm.with_structured_output(GradeDocuments)
 
 # Prompt
@@ -62,10 +75,10 @@ grade_prompt = ChatPromptTemplate.from_messages(
 retrieval_grader = grade_prompt | structured_llm_grader_docs
 
 
-question = "self rag performance"
-docs = retriever.get_relevant_documents(question)
-doc_txt = docs[1].page_content
-print(retrieval_grader.invoke({"question": question, "document": doc_txt}))
+# question = "self rag performance"
+# docs = retriever.get_relevant_documents(question)
+# doc_txt = docs[1].page_content
+# print(retrieval_grader.invoke({"question": question, "document": doc_txt}))
 
 
 from langchain import hub
@@ -75,17 +88,17 @@ from langchain_core.output_parsers import StrOutputParser
 prompt = hub.pull("rlm/rag-prompt")
 
 
-# Post-processing
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
+# # Post-processing
+# def format_docs(docs):
+#     return "\n\n".join(doc.page_content for doc in docs)
 
 
-# Chain
+# # Chain
 rag_chain = prompt | llm | StrOutputParser()
 
-# Run
-generation = rag_chain.invoke({"context": docs, "question": question})
-print(generation)
+# # Run
+# generation = rag_chain.invoke({"context": docs, "question": question})
+# print(generation)
 
 
 class GradeHallucinations(BaseModel):
@@ -109,7 +122,7 @@ hallucination_prompt = ChatPromptTemplate.from_messages(
 )
 
 hallucination_grader = hallucination_prompt | structured_llm_grader_hall
-hallucination_grader.invoke({"documents": docs, "generation": generation})
+# hallucination_grader.invoke({"documents": docs, "generation": generation})
 
 
 class GradeAnswer(BaseModel):
@@ -133,7 +146,7 @@ answer_prompt = ChatPromptTemplate.from_messages(
 )
 
 answer_grader = answer_prompt | structured_llm_grader_ans
-answer_grader.invoke({"question": question, "generation": generation})
+# answer_grader.invoke({"question": question, "generation": generation})
 
 
 # Prompt
@@ -150,7 +163,7 @@ re_write_prompt = ChatPromptTemplate.from_messages(
 )
 
 question_rewriter = re_write_prompt | llm | StrOutputParser()
-question_rewriter.invoke({"question": question})
+# question_rewriter.invoke({"question": question})
 
 
 from typing import List
@@ -351,7 +364,7 @@ workflow.add_conditional_edges(
         "generate": "generate",
     },
 )
-workflow.add_edge("transform_query", "retrieve")
+workflow.add_edge("transform_query", "generate")
 workflow.add_conditional_edges(
     "generate",
     grade_generation_v_documents_and_question,
@@ -368,8 +381,31 @@ app = workflow.compile()
 
 inputs = {}
 
+financial_expert_template = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            (
+                "You are a highly knowledgeable financial expert. "
+                "You provide extremely accurate reports with precise calculations and detailed data analysis. "
+                "Your responses include comprehensive context and well-supported predictions."
+                "Your answer includes all the analysis over the data that you can possibly do. Donot wait for user to reprompt you."
+            ),
+        ),
+        ("human", "{question}"),
+    ]
+)
+
 def run(query):
-    inputs["question"] = query  # Set query dynamically
+    # First, use the new template to reformat (or 'refine') the user's query.
+    refined_question = financial_expert_template.format(question=query)
+    # Set the refined query in the input state
+    inputs["question"] = refined_question  
     result = app.invoke(inputs)
-    # print(result["generation"])
     return result["generation"]
+
+# # Example usage:
+# user_query = input("Enter your query: ")
+# result = run(user_query)
+# print("Raw result:", result[8:-1])
+# print("Type of result:", type(result))
