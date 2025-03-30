@@ -11,6 +11,9 @@ import os
 import json
 import datetime
 import logging
+import json
+import re
+
 import tiktoken
 import dotenv
 import pathway as pw
@@ -39,8 +42,20 @@ def join_texts(texts: list) -> str:
 
 @pw.udf
 def parse_json(response: str) -> list:
-    import json
-    return json.loads(response)
+    # Fix improper escape sequences in JSON
+    response = response.replace('\\"', '"')  # Fixes improperly escaped quotes
+    response = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', response)  # Properly escape backslashes
+
+    # Extract the JSON array using regex
+    match = re.search(r'(\[.*\])', response, re.DOTALL)
+    json_str = match.group(1) if match else response
+
+    # Ensure the extracted JSON is valid
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return []  # Return an empty list on failure
 
 
 @pw.udf
@@ -109,22 +124,28 @@ def build_prompt_structure(
 def strip_metadata(docs: list[tuple[str, dict]]) -> list[str]:
     return [doc[0] for doc in docs]
 
+# @pw.udf
+# def convert_chat_output_to_payload_udf(chat_output: pw.Json) -> pw.Json:
+#     # Convert the deferred pw.Json to a Python object
+#     # Extract contents from each message
+#     contents = [msg["content"] for msg in chat_output if msg.value("content", "").strip()]
+#     return pw.Json({"prompt": {"contents": contents}})
+
 
 
 
 def run(
     *,
-    data_dir: str = os.environ.get("PATHWAY_DATA_DIR", "./data"),
+    data_dir: str = os.environ.get("PATHWAY_DATA_DIR", "./INFO/data"),
     output_csv: str = "./data/finance_docs_extracted.csv",
     api_key: str = os.environ.get("GEMINI_API_KEY", ""),
-    model_locator: str = "gemini/gemini-2.0-flash",  # can be replaced by a LangChain integration if needed
-    max_tokens: int = 1500,
+    model_locator: str = "vertex_ai/gemini-1.5-flash",  # can be replaced by a LangChain integration if needed
+    max_tokens: int = 1024,
     temperature: float = 0.0,
     **kwargs,
 ):
     # Read files from the input directory.
     files = pw.io.fs.read(data_dir, format="binary")
-    pw.debug.compute_and_print(files.select(data=pw.this.data))
     
     # # Use the UnstructuredParser to extract text from each file.
     parser = UnstructuredParser()
@@ -144,40 +165,50 @@ def run(
     
     # Build prompts for extraction.
     extraction_prompts = parsed_files.select(
-         prompt=build_prompt_structure(pw.this.texts)
+         prompt_string=build_prompt_structure(pw.this.texts)
     )
-    print(build_prompt_structure(pw.this.texts))
-    print(extraction_prompts)
-    
+        # Structure the prompt using prompt_chat_single_qa
+    chat_prompts = extraction_prompts.select(
+        prompt=prompt_chat_single_qa(pw.this.prompt_string)
+    )
+
     # Call the LLM to perform the extraction.
     model = LiteLLMChat(
          api_key=api_key,
          model=model_locator,
          temperature=temperature,
-         max_tokens=max_tokens,
         #  retry_strategy=pw.udfs.ExponentialBackoffRetryStrategy(),
         #  cache_strategy=pw.udfs.DefaultCache(),
          # Retry and cache strategies can be added as needed.
     )
-    
-    responses = extraction_prompts.select(
-         response=model(prompt_chat_single_qa(pw.this.prompt)),
+
+    responses = chat_prompts.select(
+         response=model(pw.this.prompt),
     )
-    
+
     # Parse the JSON output from the LLM.
     # It is expected that the LLM returns a JSON array of objects.
     responses = responses.select(
          records=parse_json(pw.this.response)
     )
+
     
     # UDF to add metadata (source and timestamp) to each record in the extracted JSON.
     @pw.udf
     def add_metadata(records: list, source: str) -> list:
-         ts = datetime.datetime.now().isoformat()
-         for record in records:
-             record["source"] = source
-             record["upload_time"] = ts
-         return records
+        ts = datetime.datetime.now().isoformat()
+        new_records = []
+        for record in records:
+            # Convert the record to a dict if it's a pw.Json (or a string)
+            if isinstance(record, dict):
+                rec = record
+            else:
+                rec = json.loads(str(record))
+            rec["source"] = source
+            rec["upload_time"] = ts
+            new_records.append(rec)
+        return new_records
+
     
     enriched = responses.select(
          records_with_meta=add_metadata(pw.this.records, os.path.basename(data_dir) + ".pdf")  # Assuming the source is the filename)
@@ -212,7 +243,7 @@ def run(
         upload_time=pw.apply(lambda rec: rec.get("upload_time", "") if isinstance(rec, dict) else "", pw.this.flat_records),
         data=pw.apply(lambda rec: json.dumps(rec) if isinstance(rec, dict) else json.dumps({}), pw.this.flat_records)
 )
-    
+
     # Write the enriched and flattened table to a CSV file.
     pw.io.csv.write(final_table, output_csv)
     
