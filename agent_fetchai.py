@@ -4,7 +4,7 @@ from agents.DocumentParsingAgent import process_pdfs
 from agents.DocumentParsingAgent2 import extract_transactions, process_all_files
 from agents.GetReleventTransaction import get_relevance, get_relevant_transactions
 from agents.GetUserQueryOutput import answerQuery
-
+from agents.GetReleventTransactionByDate import get_filtered_transactions
 
 #kis tarah ke message se trigger hoga 
 class InputReaderAgentMessage(Model):
@@ -30,12 +30,39 @@ class QueryAnswerAgentMessage(Model):
 class QueryAnswerAgentMessageResponse(Model):
     ans: str
 
+class FetchReleventDocbydateAgentMessage(Model):
+    key: str
+    start_date: str
+    end_date: str
+
+class FetchReleventDocbydateAgentResponse(Model):
+    filtered_transactions: list
+
 QueryAnswerAgent = Agent(name="QueryAnswerAgent", seed="QueryAnswerAgent recovery phrase", port=8000)
 
 ReleventDocumentAgent = Agent(name="ReleventDocumentAgent", seed="ReleventDocumentAgent recovery phrase", port=8000)
 
 InputReaderParseAgent = Agent(name="InputReaderAgent", seed="InputReaderAgent recovery phrase", port=8000)
 
+FetchReleventDocbydateAgent = Agent(name="FetchReleventDocbydateAgent", seed="FetchReleventDocbydateAgent recovery phrase", port=8000)
+
+
+@FetchReleventDocbydateAgent.on_rest_post("/search", FetchReleventDocbydateAgentMessage, FetchReleventDocbydateAgentResponse)
+async def fetch_relevent_doc_by_date_agent(ctx: Context, message: FetchReleventDocbydateAgentMessage) -> FetchReleventDocbydateAgentResponse:
+    """
+    Handles the fetch relevant document by date agent's message.
+
+    Args:
+        context (Context): The context of the agent.
+        sender (str): The sender of the message.
+        message (FetchReleventDocbydateAgentMessage): The message from the fetch relevant document by date agent.
+    """
+    
+    print("\n ------Getting filtered transactions---------. \n")
+    filtered_transactions = get_filtered_transactions(message.key, message.start_date, message.end_date)
+    print("\n ------Got filtered transactions successfully---------. \n")
+    
+    return FetchReleventDocbydateAgentResponse(filtered_transactions=filtered_transactions)
 
 
 # @InputReaderParseAgent.on_message(model=InputReaderAgentMessage)
@@ -148,6 +175,7 @@ bureau = Bureau()
 bureau.add(QueryAnswerAgent)
 bureau.add(InputReaderParseAgent)
 bureau.add(ReleventDocumentAgent)
+bureau.add(FetchReleventDocbydateAgent)
 # bureau.add(DemoAgent)
 
 if __name__ == "__main__":

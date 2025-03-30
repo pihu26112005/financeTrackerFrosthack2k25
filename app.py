@@ -53,15 +53,35 @@ def query_page():
         else:
             st.warning("Please enter a query before clicking the button.")
 
-def main():
-    """Main function to handle page selection"""
-    st.sidebar.title("Navigation")
-    page = st.sidebar.selectbox("Select a Page", ["Upload File", "Query Transactions"])
+def search_page():
+    """New Page for Searching"""
+    st.header("🔍 Search Transactions")
 
-    if page == "Upload File":
+    key = st.text_input("📂 Key / Month (e.g., mar_2023.pdf)")
+    start_date = st.text_input("📅 Start Date (DD-MM-YYYY)")
+    end_date = st.text_input("📅 End Date (DD-MM-YYYY)")
+
+    if st.button("🚀 Search"):
+        if key and start_date and end_date:
+            response = requests.post(
+                "http://0.0.0.0:8000/search", 
+                json={"key": key, "start_date": start_date, "end_date": end_date}
+            )
+            st.json(response.json())  # Display formatted JSON output
+        else:
+            st.warning("⚠️ Please fill in all fields before searching.")
+
+def main():
+    """Main function to handle navigation with sidebar"""
+    st.sidebar.title("🔗 Navigation")
+    page = st.sidebar.radio("Go to", ["📂 Upload File", "🔎 Query Transactions", "🔍 Search"])
+
+    if page == "📂 Upload File":
         upload_page()
-    elif page == "Query Transactions":
+    elif page == "🔎 Query Transactions":
         query_page()
+    elif page == "🔍 Search":
+        search_page()
 
 if __name__ == "__main__":
     main()
