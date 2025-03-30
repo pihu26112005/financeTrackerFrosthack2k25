@@ -5,7 +5,8 @@ from agents.DocumentParsingAgent2 import extract_transactions, process_all_files
 from agents.GetReleventTransaction import get_relevance, get_relevant_transactions
 from agents.GetUserQueryOutput import answerQuery
 from agents.GetReleventTransactionByDate import get_filtered_transactions
-from pathwayF.langchainPathwayClient import run
+from agents.IsContextNeeded import CheckQuery
+# from pathwayF.langchainPathwayClient import run
 
 #kis tarah ke message se trigger hoga 
 class InputReaderAgentMessage(Model):
@@ -45,6 +46,12 @@ class QueryVectorStoreAgentMessage(Model):
 class QueryVectorStoreAgentMessageResponse(Model):
     ans: str
 
+class IsContextNeededAgentMessage(Model):
+    message: str
+
+class IsContextNeededAgentResponse(Model):
+    ans: str
+
 QueryAnswerAgent = Agent(name="QueryAnswerAgent", seed="QueryAnswerAgent recovery phrase", port=8000)
 
 ReleventDocumentAgent = Agent(name="ReleventDocumentAgent", seed="ReleventDocumentAgent recovery phrase", port=8000)
@@ -53,25 +60,44 @@ InputReaderParseAgent = Agent(name="InputReaderAgent", seed="InputReaderAgent re
 
 FetchReleventDocbydateAgent = Agent(name="FetchReleventDocbydateAgent", seed="FetchReleventDocbydateAgent recovery phrase", port=8000)
 
-QueryVectorStoreAgent = Agent(name="QueryVectorStoreAgent", seed="QueryVectorStoreAgent recovery phrase", port=8000)
+IsContextNeededAgent = Agent(name="IsContextNeededAgent", seed="IsContextNeededAgent recovery phrase", port=8000)
 
-@QueryVectorStoreAgent.on_rest_post("/query", QueryVectorStoreAgentMessage, QueryVectorStoreAgentMessageResponse)
-async def query_vector_store_agent(ctx: Context, message: QueryVectorStoreAgentMessage) -> QueryVectorStoreAgentMessageResponse:
+# QueryVectorStoreAgent = Agent(name="QueryVectorStoreAgent", seed="QueryVectorStoreAgent recovery phrase", port=8000)
+
+# @QueryVectorStoreAgent.on_rest_post("/query", QueryVectorStoreAgentMessage, QueryVectorStoreAgentMessageResponse)
+# async def query_vector_store_agent(ctx: Context, message: QueryVectorStoreAgentMessage) -> QueryVectorStoreAgentMessageResponse:
+#     """
+#     Handles the query vector store agent's message.
+
+#     Args:
+#         context (Context): The context of the agent.
+#         sender (str): The sender of the message.
+#         message (QueryVectorStoreAgentMessage): The message from the query vector store agent.
+#     """
+    
+#     print("\n ------Getting relevant transactions---------. \n")
+#     ans = run(message.message)
+#     print("\n ------Got answer to the query successfully---------. \n")
+#     return QueryVectorStoreAgentMessageResponse(ans=ans)
+
+
+
+@IsContextNeededAgent.on_rest_post("/context/post", IsContextNeededAgentMessage, IsContextNeededAgentResponse)
+async def is_context_needed_agent(ctx: Context, message: IsContextNeededAgentMessage) -> IsContextNeededAgentResponse:
     """
-    Handles the query vector store agent's message.
+    Handles the is context needed agent's message.
 
     Args:
         context (Context): The context of the agent.
         sender (str): The sender of the message.
-        message (QueryVectorStoreAgentMessage): The message from the query vector store agent.
+        message (IsContextNeededAgentMessage): The message from the is context needed agent.
     """
     
-    print("\n ------Getting relevant transactions---------. \n")
-    ans = run(message.message)
-    print("\n ------Got answer to the query successfully---------. \n")
-    return QueryVectorStoreAgentMessageResponse(ans=ans)
-
-
+    print("\n ------Checking if context is needed---------. \n")
+    ans = CheckQuery(message.message)
+    print("\n ------Checked if context is needed successfully---------. \n")
+    
+    return IsContextNeededAgentResponse(ans=ans)
 
 @FetchReleventDocbydateAgent.on_rest_post("/search", FetchReleventDocbydateAgentMessage, FetchReleventDocbydateAgentResponse)
 async def fetch_relevent_doc_by_date_agent(ctx: Context, message: FetchReleventDocbydateAgentMessage) -> FetchReleventDocbydateAgentResponse:
@@ -202,7 +228,8 @@ bureau.add(QueryAnswerAgent)
 bureau.add(InputReaderParseAgent)
 bureau.add(ReleventDocumentAgent)
 bureau.add(FetchReleventDocbydateAgent)
-bureau.add(QueryVectorStoreAgent)
+bureau.add(IsContextNeededAgent)
+# bureau.add(QueryVectorStoreAgent)
 # bureau.add(DemoAgent)
 
 if __name__ == "__main__":
