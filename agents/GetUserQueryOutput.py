@@ -11,7 +11,7 @@ os.environ['LANGCHAIN_ENDPOINT'] = 'https://api.smith.langchain.com'
 os.environ['LANGCHAIN_PROJECT'] = 'advanced-rag'
 os.environ['LANGCHAIN_API_KEY'] = os.getenv("LANGSMITH_API_KEY")
 os.environ['GROQ_API_KEY'] = os.getenv("GROQ_API_KEY")
-os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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"
+os.environ["HUGGINGFACEHUB_API_TOKEN"] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 
 def answerQuery(user_query, filtered_transactions):
