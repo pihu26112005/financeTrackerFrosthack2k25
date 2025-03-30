@@ -8,9 +8,7 @@ port = 8666
 client = PathwayVectorClient(host=host, port=port)
 
 
-query = "Who is akshat?"
-docs = client.similarity_search(query)
+query = "I want to know my transactions which have thier dates in november last year?"
+docs = client.similarity_search(query, k=1)
+print(client.get_vectorstore_statistics())
 print(docs)
-
-# d2 = client.get_input_files()
-# print(d2)

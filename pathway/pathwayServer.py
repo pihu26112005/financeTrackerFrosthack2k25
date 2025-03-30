@@ -1,9 +1,12 @@
 import pathway as pw
 from pathway.xpacks.llm.vector_store import VectorStoreServer
-from langchain.text_splitter import CharacterTextSplitter
+# from langchain.text_splitter import CharacterTextSplitter
 # from langchain_huggingface import HuggingFaceEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from pathway.xpacks.llm import llms, parsers
+from pathway.xpacks.llm import llms, parsers, splitters, embedders
+from pathway.xpacks.llm.prompts import Build
+
 
 # Read data correctly
 local = pw.io.fs.read(
@@ -18,26 +21,35 @@ gdrive = pw.io.gdrive.read(
     service_user_credentials_file="credentials.json"
 )
 
+files = gdrive
+
+unStructureParser = parsers.UnstructuredParser()
+unstructured_documents = files.select(texts=unStructureParser(pw.this.data))
+unstructured_documents = unstructured_documents.select(texts=strip_metadata(pw.this.texts))
+
+prompt = unstructured_documents.select(prompt=build_prompt_structure(pw.this.texts))
+
+
+
 
 # Model parameters
-model_name = "BAAI/bge-small-en"
-model_kwargs = {"device": "cpu"}
-encode_kwargs = {"normalize_embeddings": True}
 
+model_name = "sentence-transformers/all-mpnet-base-v2"
+model_kwargs = {'device': 'cpu'}
+encode_kwargs = {'normalize_embeddings': True}
 embeddings = HuggingFaceEmbeddings(
-    model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+    model_name=model_name,
+    model_kwargs=model_kwargs,
+    encode_kwargs=encode_kwargs
 )
 
-# model_name = "sentence-transformers/all-mpnet-base-v2"
-# model_kwargs = {'device': 'cpu'}
-# encode_kwargs = {'normalize_embeddings': False}
-# embeddings = HuggingFaceEmbeddings(
-#     model_name=model_name,
-#     model_kwargs=model_kwargs,
-#     encode_kwargs=encode_kwargs
-# )
-splitter = CharacterTextSplitter()
 
+# Define your text splitter with appropriate settings
+# splitter = RecursiveCharacterTextSplitter(
+#     separators=["\n\n", "\n", " ", ""],
+# )
+
+splitter = splitters.TokenCountSplitter()
 parser = parsers.PypdfParser()
 
 # Server parameters
@@ -46,9 +58,11 @@ port = 8666
 
 # Start vector store server
 server = VectorStoreServer.from_langchain_components(
-    *[local, gdrive], embedder=embeddings, splitter=splitter, parser=parser
+    *[local, gdrive], embedder=embeddings, parser=parser
 
 )
+
+server.docs
 
 server.run_server(
     host=host,
