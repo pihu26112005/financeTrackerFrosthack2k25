@@ -1,6 +1,0 @@
-File: dec_2024.pdf | Chunk: 2
-----------------------------------------
-Date: 30-12-2024, Particulars: 5D8989B0022/26/12/2024 16:17:20, Deposit: 349.0, Withdrawal: None, Balance: 22007.0
-Date: 30-12-2024, Particulars: UPI/DR/436533916345/LAVAKU SH /CNRB/**87518@PTAXIS/UPI//A XI67145EDCA54D4B34AFE0B05 0125D1A8E/30/12/2024 15:57:52, Deposit: 4500.0, Withdrawal: None, Balance: 17507.0
-Date: 30-12-2024, Particulars: UPI/DR/436595631997/I I T MAN/PUNB/**11000100958561/ UPI//AXIF113F82778914438BB1 808AA5DA05681/30/12/2024 18:17:27, Deposit: 500.0, Withdrawal: None, Balance: 17007.0
-

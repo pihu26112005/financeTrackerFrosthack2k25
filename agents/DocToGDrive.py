@@ -126,7 +126,7 @@ def upload_file_to_gdrive(file_path, folder_id, credentials_file):
 # ----------------------------------------
 # MAIN PIPELINE EXECUTION
 # ----------------------------------------
-def main():
+def grivePipe():
     # Step 1: Read and chunk the transactions by file.
     chunks = chunk_transactions_by_file(INPUT_JSON_PATH, CHUNK_SIZE, OVERLAP)
     print(f"Created {len(chunks)} chunks from the input JSON.")
@@ -138,6 +138,3 @@ def main():
     # Step 3: Upload each text file to the specified Google Drive folder.
     for file_path in file_paths:
         upload_file_to_gdrive(file_path, GDRIVE_FOLDER_ID, CREDENTIALS_FILE)
-
-if __name__ == "__main__":
-    main()
