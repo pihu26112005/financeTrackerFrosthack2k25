@@ -13,16 +13,7 @@ This project is an AI-powered financial analysis system that processes and analy
 
 ## Project Structure
 ```
-├── aazold
-│   ├── adaptive_rag.py
-│   ├── app.yaml
-│   ├── data
-│   │   ├── x.txt
-│   │   ├── y.txt
-│   │   └── z.txt
-│   └── rag-app
-│       └── app.py
-├── agent_fetchai.py
+├── agent_fetchai.py  #fetchAI Agents
 ├── agents
 │   ├── DocToGDrive.py
 │   ├── DocumentParsingAgent2.py
@@ -32,7 +23,7 @@ This project is an AI-powered financial analysis system that processes and analy
 │   ├── GetUserQueryOutput.py
 │   ├── IsContextNeeded.py
 │   └── __pycache__
-├── app.py
+├── app.py  
 ├── Cache
 │   ├── 1-0-0
 │   └── 1-0-1
