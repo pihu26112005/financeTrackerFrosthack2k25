@@ -32,7 +32,7 @@ def get_relevance(user_query: str) -> List[str]:
     prompt_template = ChatPromptTemplate.from_messages([
     ("system", 
      "You have a dictionary containing transactions grouped by months. Keys are in the format 'jan_2025.pdf', 'feb_2025.pdf', etc. "
-     "Remeber Current YEar is 2025.\n\n"
+     "Remeber Current Year is 2025 and month is march.\n\n"
      "Each key represents a PDF file corresponding to a specific month and year. The values are lists of transactions, each having the fields: "
      "'Date', 'Particulars', 'Deposit', 'Withdrawal', and 'Balance'.\n\n"
      "Example of a transaction:\n"
