@@ -6,6 +6,7 @@ from dotenv import load_dotenv, find_dotenv
 import os
 import re
 from langchain_google_genai import ChatGoogleGenerativeAI
+from asi_chat import llmChat
 
 
 load_dotenv(find_dotenv())
@@ -35,11 +36,11 @@ def CheckQuery(query):
     ("user", "User Query: {query}")
 ]   )
 
-    model = HuggingFaceEndpoint(
-        repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1",  
-        temperature=0.7,
-        max_length=200
-    )
+    # model = HuggingFaceEndpoint(
+    #     repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1",  
+    #     temperature=0.7,
+    #     max_length=200
+    # )
 #     model = ChatGoogleGenerativeAI(
 #     model="gemini-2.0-flash",
 #     temperature=0,
@@ -48,8 +49,9 @@ def CheckQuery(query):
 #     # other params...
 # )
 
-    check_prompt = check_prompt_template.format(query=query)
-    response = model.invoke(check_prompt) # Clean up response
+    check_prompt = check_prompt_template.format_messages(query=query)
+    response = llmChat(check_prompt)
+    # response = model.invoke(check_prompt) # Clean up response
 
     print("LLM Response:", response)  # Debugging
     print("LLM Response:", response)  # Debugging
@@ -68,8 +70,9 @@ def CheckQuery(query):
         ("user", "User Query: {query}")
     ])
 
-    answer_prompt = answer_prompt_template.format(query=query)
-    final_response = model.invoke(answer_prompt)
+    answer_prompt = answer_prompt_template.format_messages(query=query)
+    # final_response = model.invoke(answer_prompt)
+    final_response = llmChat(answer_prompt)  # Clean up response
     print("Final Response:", final_response)  # Debugging
 
     return final_response  # Return the actual answer

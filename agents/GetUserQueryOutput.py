@@ -6,6 +6,7 @@ from dotenv import load_dotenv, find_dotenv
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pathwayF.langchainPathwayClient import run
+from asi_chat import llmChat
 
 
 
@@ -20,40 +21,21 @@ os.environ["GOOGLE_API_KEY"] = os.getenv("GEMINI_API_KEY")
 
 
 def answerQuery(user_query, filtered_transactions):
-    # with open("INFO/filtered_transactions.json", "r") as file:
-    #     filtered_transactions = json.load(file)
-        
-
-    # user_query = "what i did in march this year betweeen 3rd and 5th"
-    # ans = run(user_query)
+    ans = run(user_query)
 
     transactions_context = json.dumps(filtered_transactions, indent=4)
 
     prompt_template = ChatPromptTemplate.from_messages([
-    ("system", "You are analyzing a list of financial transactions. Each transaction contains Date, Particulars, Deposit, Withdrawal, and Balance. "
-               "Answer the user's question based on the given transactions. Respond accurately based only on the provided data."),
-    ("user", "Transactions Data:\n{transactions}\n\nUser Query: {query}"),
-    # ("assistant", "This is output from a separate summarizing agent. You are supposed to only take contextual input from this agent. DO NOT OVERWRITE factual data from this to that of system. - {ans}")
+        ("system", "You are analyzing a list of financial transactions. Each transaction contains Date, Particulars, Deposit, Withdrawal, and Balance. "
+                "Answer the user's question based on the given transactions. Respond accurately based only on the provided data."),
+        ("assistant", "Below is the output from a separate summarizing agent providing relevant contextual background. Please use this information only as a guide to enhance your final answer. Do not extract or override any factual details provided in the system message; integrate only the pertinent context to refine your response. - {ans}"),
+        ("user", "Transactions Data:\n{transactions}\n\nUser Query: {query}"),
     ])
 
 
-
-    model = HuggingFaceEndpoint(
-        repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1",  
-        temperature=0.7,
-        max_length=200
-        )
-
-#     model = ChatGoogleGenerativeAI(
-#     model="gemini-2.0-flash",
-#     temperature=0,
-#     timeout=None,
-#     max_retries=2,
-#     # other params...
-# )
-
-    prompt = prompt_template.format(transactions=transactions_context, query=user_query)
-    response = model.invoke(prompt)
+    prompt = prompt_template.format_messages(transactions=transactions_context, query=user_query)
+    # response = model.invoke(prompt)
+    response = llmChat(prompt)
 
     # Print the response
     print("LLM Response:", response)

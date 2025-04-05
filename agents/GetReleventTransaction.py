@@ -10,6 +10,7 @@ import json
 import re
 from datetime import datetime
 from langchain_google_genai import ChatGoogleGenerativeAI
+from asi_chat import llmChat
 
 
 
@@ -60,12 +61,12 @@ def get_relevance(user_query: str) -> List[str]:
 
 
     
-    model = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
-    model = HuggingFaceEndpoint(
-    repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1",  # ✅ Correct model
-    temperature=0.7,
-    max_length=200
-    )
+    # model = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
+    # model = HuggingFaceEndpoint(
+    # repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1",  # ✅ Correct model
+    # temperature=0.7,
+    # max_length=200
+    # )
 
     # model = ChatGoogleGenerativeAI(
     # model="gemini-2.0-flash",
@@ -75,8 +76,9 @@ def get_relevance(user_query: str) -> List[str]:
     # # other params...
 # )
     
-    prompt = prompt_template.format(query=user_query)
-    response = model.invoke(prompt)
+    prompt = prompt_template.format_messages(query=user_query)
+    # response = model.invoke(prompt)
+    response = llmChat(prompt)  # Clean up response
     
     return response
 
@@ -89,7 +91,15 @@ def get_relevance(user_query: str) -> List[str]:
 # def get_relevant_transactions(user_query: str):
     # result = get_relevance(user_query)
 def get_relevant_transactions(result,database):
-    match = re.search(r'\{.*\}', result, re.DOTALL)  # Find JSON inside curly brackets
+    # res = result["choices"][0]["message"]["content"]
+    # Parse the outer JSON response first
+    outer_response = json.loads(result)
+    try:
+        message_content = outer_response["choices"][0]["message"]["content"]
+    except (KeyError, IndexError) as e:
+        raise ValueError("Unexpected response structure") from e
+
+    match = re.search(r'\{.*\}', message_content, re.DOTALL)  # Find JSON inside curly brackets
     parsed_result = None
     if match:
         clean_json = match.group(0)  # Extract JSON string
@@ -100,7 +110,6 @@ def get_relevant_transactions(result,database):
 
     # with open("INFO/processed_output.json", "r") as file:
     #     database = json.load(file)
-
     key = parsed_result["key"]  # Example: "mar_2023.pdf"
     start_date = parsed_result["date_range"]["start"]  # Example: "03-03-2023"
     end_date = parsed_result["date_range"]["end"]  # Example: "05-03-2023"

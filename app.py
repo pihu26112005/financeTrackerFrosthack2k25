@@ -141,26 +141,59 @@ def query_page():
 
 def chat_page():
     """Page for chatting with the model"""
-    st.title("chat with model")
+    st.title("Chat with Model")
 
     query = st.text_input("Enter your query")
 
     if st.button("Get Answer"):
         if query:
-            response00 = requests.post("http://0.0.0.0:8000//context/post", json={"message": query})
-            # st.write(response00.json())
-            answer = response00.json().get("ans")
-            if(answer.lower() == "yes"):
+            # Get context: returns "Yes" or "No"
+            response00 = requests.post("http://0.0.0.0:8000/context/post", json={"message": query})
+            context_ans = response00.json().get("ans")
+            
+            if context_ans.lower() == "yes":
+                # Call endpoints for the refined answer
+                # (Assuming /rest/post and /pest/post are both used; adjust as needed)
                 response0 = requests.post("http://0.0.0.0:8000/rest/post", json={"message": query})
                 response = requests.post("http://0.0.0.0:8000/pest/post", json={"message": query})
-                # response2 = requests.post("http://0.0.0.0:8000/query", json={"message": query})
-                # st.write(response2.json())
-                st.write(response.json())
+                
+                # The API returns a JSON with an "ans" key that is a JSON string.
+                result = response.json()
+                ans_str = result.get("ans")
+                if not ans_str:
+                    st.error("No answer received from the API.")
+                    return
+
+                try:
+                    # Parse the nested JSON string
+                    parsed_ans = json.loads(ans_str)
+                except Exception as e:
+                    st.error(f"Error parsing answer JSON: {e}")
+                    st.write(ans_str)
+                    return
+
+                # Extract the refined final answer from the choices field.
+                try:
+                    final_answer = parsed_ans["choices"][0]["message"]["content"]
+                except (KeyError, IndexError):
+                    final_answer = "Could not extract final answer from response."
+                
+                # Extract the model's internal thought process, if available.
+                thoughts = parsed_ans.get("thought", [])
+                
+                # Display the final answer in a refined, representable manner.
+                st.markdown("### Final Answer")
+                st.markdown(final_answer)
+
+                # Show the model's internal thoughts in a collapsible section.
+                if thoughts:
+                    with st.expander("Show Model Thought Process"):
+                        for t in thoughts:
+                            st.write(t)
             else:
-                st.write(answer)
+                st.write(context_ans)
         else:
             st.warning("Please enter a query before clicking the button.")
-
 
 def search_page():
     """New Page for Searching"""
