@@ -93,45 +93,77 @@ def get_relevance(user_query: str) -> List[str]:
 def get_relevant_transactions(result,database):
     # res = result["choices"][0]["message"]["content"]
     # Parse the outer JSON response first
-    outer_response = json.loads(result)
+    try:
+        outer_response = json.loads(result)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding outer JSON: {e}")
+        return []
+    
     try:
         message_content = outer_response["choices"][0]["message"]["content"]
     except (KeyError, IndexError) as e:
-        raise ValueError("Unexpected response structure") from e
+        print("Unexpected response structure:", e)
+        return []
 
     match = re.search(r'\{.*\}', message_content, re.DOTALL)  # Find JSON inside curly brackets
     parsed_result = None
     if match:
-        clean_json = match.group(0)  # Extract JSON string
-        parsed_result = json.loads(clean_json)  # Parse it
-        # print("Parsed JSON:", parsed_result)
+        clean_json = match.group(0)
+        try:
+            parsed_result = json.loads(clean_json)
+        except json.JSONDecodeError as e:
+            print("Error decoding extracted JSON:", e)
+            parsed_result = {"key": "", "date_range": {"start": "", "end": ""}}
     else:
-        raise ValueError("No valid JSON found in result")
+        # No valid JSON found: set default empty values
+        print("No valid JSON found in result; using default empty values.")
+        parsed_result = {"key": "", "date_range": {"start": "", "end": ""}}
 
     # with open("INFO/processed_output.json", "r") as file:
     #     database = json.load(file)
     key = parsed_result["key"]  # Example: "mar_2023.pdf"
     start_date = parsed_result["date_range"]["start"]  # Example: "03-03-2023"
     end_date = parsed_result["date_range"]["end"]  # Example: "05-03-2023"
-
-    start_dt = datetime.strptime(start_date, "%d-%m-%Y")
-    end_dt = datetime.strptime(end_date, "%d-%m-%Y")
-
+    
+    if not key or not start_date or not end_date:
+        print("Missing key or date range in parsed JSON.")
+        return []
+    
+    try:
+        start_dt = datetime.strptime(start_date, "%d-%m-%Y")
+        end_dt = datetime.strptime(end_date, "%d-%m-%Y")
+    except Exception as e:
+        print("Error parsing dates:", e)
+        return []
+    
     if key in database:
-        transactions = database[key]  
-
+        transactions = database[key]
         filtered_transactions = [
             txn for txn in transactions
             if start_dt <= datetime.strptime(txn["Date"], "%d-%m-%Y") <= end_dt
         ]
-        # print("Filtered Transactions:", json.dumps(filtered_transactions, indent=4))
         return filtered_transactions
-        # return json.dumps(filtered_transactions, indent=4)
-    
-        # output_file = "INFO/filtered_transactions.json"
-        # with open(output_file, "w") as file:
-        #     json.dump(filtered_transactions, file, indent=4)
-        # print(f"Filtered transactions saved to {output_file}")
-        
     else:
         print(f"No transactions found for {key}")
+        return []
+    # start_dt = datetime.strptime(start_date, "%d-%m-%Y")
+    # end_dt = datetime.strptime(end_date, "%d-%m-%Y")
+
+    # if key in database:
+    #     transactions = database[key]  
+
+    #     filtered_transactions = [
+    #         txn for txn in transactions
+    #         if start_dt <= datetime.strptime(txn["Date"], "%d-%m-%Y") <= end_dt
+    #     ]
+    #     # print("Filtered Transactions:", json.dumps(filtered_transactions, indent=4))
+    #     return filtered_transactions
+    #     # return json.dumps(filtered_transactions, indent=4)
+    
+    #     # output_file = "INFO/filtered_transactions.json"
+    #     # with open(output_file, "w") as file:
+    #     #     json.dump(filtered_transactions, file, indent=4)
+    #     # print(f"Filtered transactions saved to {output_file}")
+        
+    # else:
+    #     print(f"No transactions found for {key}")
