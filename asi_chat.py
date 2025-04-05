@@ -1,7 +1,9 @@
-import requests
 import json
 import os
 from dotenv import load_dotenv, find_dotenv
+import requests
+
+
 
 
 load_dotenv(find_dotenv())
@@ -15,15 +17,30 @@ def llmChat(messages, model="asi1-mini", max_tokens=8000, temperature=0, stream=
     # Convert LangChain Message objects to dicts
     if hasattr(messages[0], 'type'):  # Detects if these are LangChain messages
         messages = [{"role": m.type, "content": m.content} for m in messages]
+        
+    # Map any non-standard roles to OpenAI-style roles
+    role_map = {
+        "human": "user",
+        "user": "user",
+        "ai": "assistant",
+        "assistant": "assistant",
+        "system": "system"
+    }
     
     formatted_messages = []
     for m in messages:
-        role = m["role"] if isinstance(m, dict) else m.type
-        if role == "human":
-            role = "user"
-        content = m["content"] if isinstance(m, dict) else m.content
-        formatted_messages.append({"role": role, "content": content})
+        # Determine the original role and content
+        if isinstance(m, dict):
+            orig_role = m.get("role", "").lower()
+            content = m.get("content", "")
+        else:
+            orig_role = getattr(m, "type", "").lower()
+            content = getattr(m, "content", "")
 
+        # Map to valid role or default to "user"
+        role = role_map.get(orig_role, "user")
+
+        formatted_messages.append({"role": role, "content": content})
     payload = json.dumps({
         "model": model,
         "messages": formatted_messages,
@@ -40,6 +57,6 @@ def llmChat(messages, model="asi1-mini", max_tokens=8000, temperature=0, stream=
 
     response = requests.post(url, headers=headers, data=payload, timeout=100)
     print("Status:", response.status_code)
-    print("Response:", response.text)
+    # print("Response:", response.text)
     
     return response.text
