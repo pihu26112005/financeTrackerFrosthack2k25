@@ -1,5 +1,0 @@
-File: nov_2024.pdf | Chunk: 2
-----------------------------------------
-Date: 24-11-2024, Particulars: MB-IMPS-DR/ASIF HODA/SBIN/**2940/ /24/11/2024 17:55:27/432917170013, Deposit: 320.0, Withdrawal: None, Balance: 17314.0
-Date: 27-11-2024, Particulars: UPI/CR/433291218854/ASIF HODA/SBIN/**IF123@OKSBI/UP I//SBI7DCBBB52B22A4577BF2F 633EB173B17E/27/11/2024 17:24:08, Deposit: 1.0, Withdrawal: None, Balance: 17315.0
-

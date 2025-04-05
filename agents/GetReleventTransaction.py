@@ -30,30 +30,58 @@ def get_relevance(user_query: str) -> List[str]:
     Filters transactions based on user query and returns a list containing:
     [relevant key, initial date, final date]
     """
+    #TODO: Make this prompt dynamic for dates
+    
+    #TODO: You will also have to add support fo multiple keys for each date range
     prompt_template = ChatPromptTemplate.from_messages([
-    ("system", 
-     "You have a dictionary containing transactions grouped by months. Keys are in the format 'jan_2025.pdf', 'feb_2025.pdf', etc. "
-     "Remeber Current Year is 2025 and month is march.\n\n"
-     "Each key represents a PDF file corresponding to a specific month and year. The values are lists of transactions, each having the fields: "
-     "'Date', 'Particulars', 'Deposit', 'Withdrawal', and 'Balance'.\n\n"
-     "Example of a transaction:\n"
-     "{{\n"
-     '    "Date": "01-02-2025",\n'
-     '    "Particulars": "UPI/DR/503291190852/PIYUSH KU/PPIW/**86231@FAM/UPI//S BIA261AE17B77646879B30D18 8C204C9B6/01/02/2025 12:49:21",\n'
-     '    "Deposit": 100.0,\n'
-     '    "Withdrawal": null,\n'
-     '    "Balance": 13913.0\n'
-     "}}\n\n"
-     "Instructions:\n"
-     "- Identify the relevant month and year from the user query and return only the matching key (e.g., 'jan_2025.pdf').\n"
-     "- Infer the date(s) based on the user's query and return them in the format **DD-MM-YYYY**.\n"
-     "- The response must be **strictly** in JSON format with only the required key and date range.\n"
-     "- The output must contain **nothing else**—no explanations, headers, or extra text.\n\n"
-     "Format the output as:\n"
-     "{{\n"
-     '    "key": "<matching_file_name>.pdf",\n'
-     '    "date_range": {{"start": "<earliest_date>", "end": "<latest_date>"}}\n'
-     "}}"
+    ("system",
+        "You have a dictionary containing transactions grouped by months. Keys are in the format 'Jan-25', 'Feb-25', 'May-18' etc. "
+        "Each key maps to a list of transactions, each with the fields: 'Date', 'Particulars', 'Deposit', 'Withdrawal', and 'Balance'.\n\n"
+        "Transaction example:\n"
+        "{{{{\n"
+        '  "Date": "01-02-2025",\n'
+        '  "Particulars": "UPI/DR/...",\n'
+        '  "Deposit": 100.0,\n'
+        '  "Withdrawal": null,\n'
+        '  "Balance": 13913.0\n'
+        "}}}}\n\n"
+        "Current year is 2025 and the current month is April. This is for context of current time, if its is required anywhere, otherwise donot use it.\n\n"
+        "Instructions:\n"
+        "- Based on the user query, identify all relevant months and years in the whole dictionary, and return a single key that corresponds to the month to use.\n"
+        "- Extract all relevant date ranges and return them in **DD-MM-YYYY** format.\n"
+        "- The response must be strictly in JSON with only the key and a list of date ranges.\n\n"
+        "Output format:\n"
+        "{{{{\n"
+        '  "key": "<month-year>",\n'
+        '  "date_ranges": [\n'
+        '    {{"start": "DD-MM-YYYY", "end": "DD-MM-YYYY"}},\n'
+        '    ...\n'
+        '  ]\n'
+        "}}}}"
+
+        "DO NOT include any text outside the JSON."
+        # "You have a dictionary containing transactions grouped by months. Keys are in the format 'Jan-25', 'Feb-25', 'May-18' etc. "
+        # "Remember Current Year is 2025 and month is april\n\n"
+        # "Each key represents a list of transactions corresponding to a specific month and year. The values are lists of transactions, each having the fields: "
+        # "'Date', 'Particulars', 'Deposit', 'Withdrawal', and 'Balance'.\n\n"
+        # "Example of a transaction:\n"
+        # "{{\n"
+        # '    "Date": "01-02-2025",\n'
+        # '    "Particulars": "UPI/DR/503291190852/PIYUSH KU/PPIW/**86231@FAM/UPI//S BIA261AE17B77646879B30D18 8C204C9B6/01/02/2025 12:49:21",\n'
+        # '    "Deposit": 100.0,\n'
+        # '    "Withdrawal": null,\n'
+        # '    "Balance": 13913.0\n'
+        # "}}\n\n"
+        # "Instructions:\n"
+        # "- Identify the relevant month and year from the user query and return only the matching key (e.g., 'Jan-25').\n"
+        # "- Infer the date(s) based on the user's query and return them in the format **DD-MM-YYYY**.\n"
+        # "- The response must be **strictly** in JSON format with only the required key and date range.\n"
+        # "- The output must contain **nothing else**—no explanations, headers, or extra text.\n\n"
+        # "Format the output as:\n"
+        # "{{\n"
+        # '    "key": "<month-year>",\n'
+        # '    "date_range": {{"start": "<earliest_date>", "end": "<latest_date>"}}\n'
+        # "}}"
     ),
     ("user", "User query: {query}")
     ])
@@ -90,64 +118,67 @@ def get_relevance(user_query: str) -> List[str]:
 
 # def get_relevant_transactions(user_query: str):
     # result = get_relevance(user_query)
-def get_relevant_transactions(result,database):
-    # res = result["choices"][0]["message"]["content"]
-    # Parse the outer JSON response first
-    try:
-        outer_response = json.loads(result)
-    except json.JSONDecodeError as e:
-        print(f"Error decoding outer JSON: {e}")
-        return []
     
-    try:
-        message_content = outer_response["choices"][0]["message"]["content"]
-    except (KeyError, IndexError) as e:
-        print("Unexpected response structure:", e)
-        return []
+# def get_relevant_transactions(result,database):
+#     # res = result["choices"][0]["message"]["content"]
+#     # Parse the outer JSON response first
+#     try:
+#         outer_response = json.loads(result)
+#     except json.JSONDecodeError as e:
+#         print(f"Error decoding outer JSON: {e}")
+#         return []
+    
+#     try:
+#         message_content = outer_response["choices"][0]["message"]["content"]
+#     except (KeyError, IndexError) as e:
+#         print("Unexpected response structure:", e)
+#         return []
 
-    match = re.search(r'\{.*\}', message_content, re.DOTALL)  # Find JSON inside curly brackets
-    parsed_result = None
-    if match:
-        clean_json = match.group(0)
-        try:
-            parsed_result = json.loads(clean_json)
-        except json.JSONDecodeError as e:
-            print("Error decoding extracted JSON:", e)
-            parsed_result = {"key": "", "date_range": {"start": "", "end": ""}}
-    else:
-        # No valid JSON found: set default empty values
-        print("No valid JSON found in result; using default empty values.")
-        parsed_result = {"key": "", "date_range": {"start": "", "end": ""}}
+#     match = re.search(r'\{.*\}', message_content, re.DOTALL)  # Find JSON inside curly brackets
+#     parsed_result = None
+#     if match:
+#         clean_json = match.group(0)
+#         try:
+#             parsed_result = json.loads(clean_json)
+#         except json.JSONDecodeError as e:
+#             print("Error decoding extracted JSON:", e)
+#             parsed_result = {"key": "", "date_range": {"start": "", "end": ""}}
+#     else:
+#         # No valid JSON found: set default empty values
+#         print("No valid JSON found in result; using default empty values.")
+#         parsed_result = {"key": "", "date_range": {"start": "", "end": ""}}
 
-    # with open("INFO/processed_output.json", "r") as file:
-    #     database = json.load(file)
-    key = parsed_result["key"]  # Example: "mar_2023.pdf"
-    start_date = parsed_result["date_range"]["start"]  # Example: "03-03-2023"
-    end_date = parsed_result["date_range"]["end"]  # Example: "05-03-2023"
+#     # with open("INFO/processed_output.json", "r") as file:
+#     #     database = json.load(file)
+#     print(parsed_result)
+#     key = parsed_result["key"]  # Example: "mar_2023.pdf"
+#     start_date = parsed_result["date_range"]["start"]  # Example: "03-03-2023"
+#     end_date = parsed_result["date_range"]["end"]  # Example: "05-03-2023"
     
-    if not key or not start_date or not end_date:
-        print("Missing key or date range in parsed JSON.")
-        return []
+#     if not key or not start_date or not end_date:
+#         print("Missing key or date range in parsed JSON.")
+#         return []
     
-    try:
-        start_dt = datetime.strptime(start_date, "%d-%m-%Y")
-        end_dt = datetime.strptime(end_date, "%d-%m-%Y")
-    except Exception as e:
-        print("Error parsing dates:", e)
-        return []
+#     try:
+#         start_dt = datetime.strptime(start_date, "%d-%m-%Y")
+#         end_dt = datetime.strptime(end_date, "%d-%m-%Y")
+#     except Exception as e:
+#         print("Error parsing dates:", e)
+#         return []
     
-    if key in database:
-        transactions = database[key]
-        filtered_transactions = [
-            txn for txn in transactions
-            if start_dt <= datetime.strptime(txn["Date"], "%d-%m-%Y") <= end_dt
-        ]
-        return filtered_transactions
-    else:
-        print(f"No transactions found for {key}")
-        return []
+#     if key in database:
+#         transactions = database[key]
+#         filtered_transactions = [
+#             txn for txn in transactions
+#             if start_dt <= datetime.strptime(txn["Date"], "%d-%m-%Y") <= end_dt
+#         ]
+#         return filtered_transactions
+#     else:
+#         print(f"No transactions found for {key}")
+#         return []
     # start_dt = datetime.strptime(start_date, "%d-%m-%Y")
     # end_dt = datetime.strptime(end_date, "%d-%m-%Y")
+    
 
     # if key in database:
     #     transactions = database[key]  
@@ -167,3 +198,54 @@ def get_relevant_transactions(result,database):
         
     # else:
     #     print(f"No transactions found for {key}")
+
+#UPDATED CODE
+
+def get_relevant_transactions(result: str, database: dict):
+    try:
+        # If result is not parsed yet
+        outer_response = json.loads(result) if isinstance(result, str) else result
+        message_content = outer_response["choices"][0]["message"]["content"]
+        print(message_content)
+    except Exception as e:
+        print("Error reading response content:", e)
+        return []
+
+    # Extract only the JSON part
+    match = re.search(r'\{.*\}', message_content, re.DOTALL)
+    if not match:
+        print("No valid JSON found.")
+        return []
+    
+    try:
+        parsed = json.loads(match.group(0))
+        key = parsed.get("key", "")
+        date_ranges = parsed.get("date_ranges") or [parsed.get("date_range")]
+        if not key or not date_ranges:
+            raise ValueError("Missing key or date ranges.")
+    except Exception as e:
+        print("Error parsing LLM JSON output:", e)
+        return []
+
+    if key not in database:
+        print(f"No transactions found for {key}")
+        return []
+
+    try:
+        all_filtered = []
+        transactions = database[key]
+
+        for range_ in date_ranges:
+            start = datetime.strptime(range_["start"], "%d-%m-%Y")
+            end = datetime.strptime(range_["end"], "%d-%m-%Y")
+
+            filtered = [
+                txn for txn in transactions
+                if start <= datetime.strptime(txn["Date"], "%d-%m-%Y") <= end
+            ]
+            all_filtered.extend(filtered)
+
+        return all_filtered
+    except Exception as e:
+        print("Error filtering transactions:", e)
+        return []

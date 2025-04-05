@@ -33,7 +33,7 @@ def extract_transactions(page_content):
 
     return transactions
 
-def process_all_files(info_data,fileNAme):
+def process_all_files(info_data, fileNAme):
     processed_data = {}
 
     for file_name, pages in info_data.items():

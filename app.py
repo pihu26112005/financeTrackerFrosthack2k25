@@ -47,27 +47,53 @@ def upload_page():
 
     ### 🔹 Section 1: Upload Feature
     st.header("🚀 Upload File")
-    uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"])
+    uploaded_files = st.file_uploader("Choose a PDF file", type=["pdf"], accept_multiple_files=True)
 
-    if uploaded_file:
-        file_path = os.path.join(DATA_DIR, uploaded_file.name)
-        with open(file_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        st.success(f"✅ File '{uploaded_file.name}' saved successfully!")
+    # if uploaded_file:
+    #     file_path = os.path.join(DATA_DIR, uploaded_file.name)
+    #     with open(file_path, "wb") as f:
+    #         f.write(uploaded_file.getbuffer())
+    #     st.success(f"✅ File '{uploaded_file.name}' saved successfully!")
 
-        # Store filename in session state
-        st.session_state["uploaded_filename"] = uploaded_file.name
+    #     # Store filename in session state
+    #     st.session_state["uploaded_filename"] = uploaded_file.name
+
+    # if st.button("🔄 Add File Data"):
+    #     if "uploaded_filename" in st.session_state:
+    #         response = requests.post(
+    #             "http://0.0.0.0:8000/nest/post",
+    #             json={"message": st.session_state["uploaded_filename"]}
+    #         )
+    #         st.write(response.json())
+    #         st.write("📌 Button clicked!")
+    #     else:
+    #         st.warning("⚠️ Please upload a file before clicking 'Add File Data'.")
+    # UPDATED CODE
+    if uploaded_files:
+        # Save each uploaded file
+        for uploaded_file in uploaded_files:
+            file_path = os.path.join(DATA_DIR, uploaded_file.name)
+            with open(file_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            st.success(f"✅ File '{uploaded_file.name}' saved successfully!")
+        # Store the list of filenames in session state
+        st.session_state["uploaded_filenames"] = [f.name for f in uploaded_files]
 
     if st.button("🔄 Add File Data"):
-        if "uploaded_filename" in st.session_state:
-            response = requests.post(
-                "http://0.0.0.0:8000/nest/post",
-                json={"message": st.session_state["uploaded_filename"]}
-            )
-            st.write(response.json())
+        if "uploaded_filenames" in st.session_state:
+            responses = []
+            # Loop over each filename and send an individual call
+            for fname in st.session_state["uploaded_filenames"]:
+                response = requests.post(
+                    "http://0.0.0.0:8000/nest/post",
+                    json={"message": fname}
+                )
+                responses.append(response.json())
+            st.write("Responses:")
+            st.write(responses)
             st.write("📌 Button clicked!")
         else:
-            st.warning("⚠️ Please upload a file before clicking 'Add File Data'.")
+            st.warning("⚠️ Please upload file(s) before clicking 'Add File Data'.")
 
     ### 🔹 Section 2: Show Graphs for Transactions
     st.header("📊 Transaction Analytics")
