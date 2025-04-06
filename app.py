@@ -286,6 +286,19 @@ def search_page():
                 st.warning("⚠️ No transactions found for the given inputs.")
         else:
             st.warning("⚠️ Please fill in all fields before searching.")
+            
+def dynamic_graph_page():
+    st.title("📊 Dynamic Transaction Graphs")
+    st.write("Enter a query to generate a custom graph based on transaction data.")
+    
+    user_query = st.text_input("Enter your query (e.g., 'show me monthly expenditure trends')")
+    
+    if st.button("Generate Graph"):
+        if user_query:
+            dynamic_plotting_agent(user_query)
+        else:
+            st.warning("Please enter a query.")
+
 
 def main():
     """Main function to handle navigation with sidebar"""
@@ -300,6 +313,8 @@ def main():
         search_page()
     elif page == "💬 Chat":
         chat_page()
+    elif page == "📊 Dynamic Graph":
+        dynamic_graph_page()
 
 
 if __name__ == "__main__":

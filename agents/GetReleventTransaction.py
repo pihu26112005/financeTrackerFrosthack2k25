@@ -30,9 +30,8 @@ def get_relevance(user_query: str) -> List[str]:
     Filters transactions based on user query and returns a list containing:
     [relevant key, initial date, final date]
     """
-    #TODO: Make this prompt dynamic for dates
+    #TODO: Make this prompt dynamic for current date. Also maybe give this prompt some context from processed output. to give a good date range.
     
-    #TODO: You will also have to add support fo multiple keys for each date range
     prompt_template = ChatPromptTemplate.from_messages([
     ("system",
         "You have a dictionary containing transactions grouped by months. Keys are in the format 'Jan-25', 'Feb-25', 'May-18' etc. "
@@ -46,15 +45,15 @@ def get_relevance(user_query: str) -> List[str]:
         '  "Balance": 13913.0\n'
         "}}}}\n\n"
         "Current year is 2025 and the current month is April. This is for context of current time, if its is required anywhere, otherwise donot use it.\n\n"
+        "If user asks for starting date, then take it as 01-01-1999.\n"
         "Instructions:\n"
-        "- Based on the user query, identify all relevant months and years in the whole dictionary, and return a single key that corresponds to the month to use.\n"
-        "- Extract all relevant date ranges and return them in **DD-MM-YYYY** format.\n"
-        "- The response must be strictly in JSON with only the key and a list of date ranges.\n\n"
+        "- Based on the user query, extract all relevant date ranges (in **DD-MM-YYYY** format) that cover the transactions of interest. \n"
+        "- Consider all transactions in the dictionary and return only the date ranges that are relevant. "
+        "- Return the result strictly in JSON with the following format:\n"
         "Output format:\n"
         "{{{{\n"
-        '  "key": "<month-year>",\n'
         '  "date_ranges": [\n'
-        '    {{"start": "DD-MM-YYYY", "end": "DD-MM-YYYY"}},\n'
+        '    {{"start": "<earliest_date>", "end": "<latest_date>"}},\n'
         '    ...\n'
         '  ]\n'
         "}}}}"
@@ -201,6 +200,22 @@ def get_relevance(user_query: str) -> List[str]:
 
 #UPDATED CODE
 
+def get_month_keys_in_range(start_dt: datetime, end_dt: datetime) -> List[str]:
+    """Return a list of month keys in the format '%b-%y' from start_dt to end_dt (inclusive)."""
+    keys = []
+    # Set current to the first day of the start month
+    current = datetime(start_dt.year, start_dt.month, 1)
+    # Continue until the current month exceeds the end date
+    while current <= end_dt:
+        keys.append(current.strftime("%b-%y"))
+        # Move to the next month
+        if current.month == 12:
+            current = datetime(current.year + 1, 1, 1)
+        else:
+            current = datetime(current.year, current.month + 1, 1)
+    return keys
+
+
 def get_relevant_transactions(result: str, database: dict):
     try:
         # If result is not parsed yet
@@ -219,33 +234,60 @@ def get_relevant_transactions(result: str, database: dict):
     
     try:
         parsed = json.loads(match.group(0))
-        key = parsed.get("key", "")
         date_ranges = parsed.get("date_ranges") or [parsed.get("date_range")]
-        if not key or not date_ranges:
-            raise ValueError("Missing key or date ranges.")
+        if not date_ranges or date_ranges[0] is None:
+            raise ValueError("Missing date ranges.")
     except Exception as e:
         print("Error parsing LLM JSON output:", e)
         return []
 
-    if key not in database:
-        print(f"No transactions found for {key}")
-        return []
+    all_filtered = []
+    # For each provided date range, compute which month keys are relevant.
+    for dr in date_ranges:
+        try:
+            start_dt = datetime.strptime(dr["start"], "%d-%m-%Y")
+            end_dt = datetime.strptime(dr["end"], "%d-%m-%Y")
+        except Exception as e:
+            print("Error parsing dates in range:", dr, e)
+            continue
 
-    try:
-        all_filtered = []
-        transactions = database[key]
+        # Get month keys between start_dt and end_dt
+        month_keys = get_month_keys_in_range(start_dt, end_dt)
+        print(f"For date range {dr}, month keys to check: {month_keys}")
 
-        for range_ in date_ranges:
-            start = datetime.strptime(range_["start"], "%d-%m-%Y")
-            end = datetime.strptime(range_["end"], "%d-%m-%Y")
+        for key in month_keys:
+            if key in database:
+                transactions = database[key]
+                # Filter transactions in this key that lie within the date range
+                for txn in transactions:
+                    try:
+                        txn_date = datetime.strptime(txn["Date"], "%d-%m-%Y")
+                    except Exception:
+                        continue
+                    if start_dt <= txn_date <= end_dt:
+                        all_filtered.append(txn)
+    return all_filtered
 
-            filtered = [
-                txn for txn in transactions
-                if start <= datetime.strptime(txn["Date"], "%d-%m-%Y") <= end
-            ]
-            all_filtered.extend(filtered)
 
-        return all_filtered
-    except Exception as e:
-        print("Error filtering transactions:", e)
-        return []
+    # if key not in database:
+    #     print(f"No transactions found for {key}")
+    #     return []
+
+    # try:
+    #     all_filtered = []
+    #     transactions = database[key]
+
+    #     for range_ in date_ranges:
+    #         start = datetime.strptime(range_["start"], "%d-%m-%Y")
+    #         end = datetime.strptime(range_["end"], "%d-%m-%Y")
+
+    #         filtered = [
+    #             txn for txn in transactions
+    #             if start <= datetime.strptime(txn["Date"], "%d-%m-%Y") <= end
+    #         ]
+    #         all_filtered.extend(filtered)
+
+    #     return all_filtered
+    # except Exception as e:
+    #     print("Error filtering transactions:", e)
+    #     return []
