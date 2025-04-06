@@ -5,6 +5,38 @@ import plotly.express as px
 import pandas as pd
 import json
 
+def render_response(response):
+    try:
+        result = response.json()
+        ans_str = result.get("ans")
+        if not ans_str:
+            st.error("No answer received from the API.")
+            return
+
+        # Parse the nested JSON string
+        parsed_ans = json.loads(ans_str)
+
+        # Extract the refined final answer
+        final_answer = parsed_ans["choices"][0]["message"]["content"]
+
+        # Extract model thoughts if available
+        thoughts = parsed_ans.get("thought", [])
+
+        # Display final answer
+        st.markdown("### Final Answer")
+        st.markdown(final_answer)
+
+        # Display internal thoughts in an expander
+        if thoughts:
+            with st.expander("Show Model Thought Process"):
+                for t in thoughts:
+                    st.write(t)
+
+    except Exception as e:
+        st.error(f"Error processing response: {e}")
+        st.write(response.text)
+
+
 # Create the directory if it doesn't exist
 DATA_DIR = "INFO/data"
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -15,27 +47,53 @@ def upload_page():
 
     ### 🔹 Section 1: Upload Feature
     st.header("🚀 Upload File")
-    uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"])
+    uploaded_files = st.file_uploader("Choose a PDF file", type=["pdf"], accept_multiple_files=True)
 
-    if uploaded_file:
-        file_path = os.path.join(DATA_DIR, uploaded_file.name)
-        with open(file_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        st.success(f"✅ File '{uploaded_file.name}' saved successfully!")
+    # if uploaded_file:
+    #     file_path = os.path.join(DATA_DIR, uploaded_file.name)
+    #     with open(file_path, "wb") as f:
+    #         f.write(uploaded_file.getbuffer())
+    #     st.success(f"✅ File '{uploaded_file.name}' saved successfully!")
 
-        # Store filename in session state
-        st.session_state["uploaded_filename"] = uploaded_file.name
+    #     # Store filename in session state
+    #     st.session_state["uploaded_filename"] = uploaded_file.name
+
+    # if st.button("🔄 Add File Data"):
+    #     if "uploaded_filename" in st.session_state:
+    #         response = requests.post(
+    #             "http://0.0.0.0:8000/nest/post",
+    #             json={"message": st.session_state["uploaded_filename"]}
+    #         )
+    #         st.write(response.json())
+    #         st.write("📌 Button clicked!")
+    #     else:
+    #         st.warning("⚠️ Please upload a file before clicking 'Add File Data'.")
+    # UPDATED CODE
+    if uploaded_files:
+        # Save each uploaded file
+        for uploaded_file in uploaded_files:
+            file_path = os.path.join(DATA_DIR, uploaded_file.name)
+            with open(file_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            st.success(f"✅ File '{uploaded_file.name}' saved successfully!")
+        # Store the list of filenames in session state
+        st.session_state["uploaded_filenames"] = [f.name for f in uploaded_files]
 
     if st.button("🔄 Add File Data"):
-        if "uploaded_filename" in st.session_state:
-            response = requests.post(
-                "http://0.0.0.0:8000/nest/post",
-                json={"message": st.session_state["uploaded_filename"]}
-            )
-            st.write(response.json())
+        if "uploaded_filenames" in st.session_state:
+            responses = []
+            # Loop over each filename and send an individual call
+            for fname in st.session_state["uploaded_filenames"]:
+                response = requests.post(
+                    "http://0.0.0.0:8000/nest/post",
+                    json={"message": fname}
+                )
+                responses.append(response.json())
+            st.write("Responses:")
+            st.write(responses)
             st.write("📌 Button clicked!")
         else:
-            st.warning("⚠️ Please upload a file before clicking 'Add File Data'.")
+            st.warning("⚠️ Please upload file(s) before clicking 'Add File Data'.")
 
     ### 🔹 Section 2: Show Graphs for Transactions
     st.header("📊 Transaction Analytics")
@@ -141,99 +199,27 @@ def query_page():
 
 def chat_page():
     """Page for chatting with the model"""
-    st.title("chat with model")
+    st.title("Chat with Model")
 
     query = st.text_input("Enter your query")
 
     if st.button("Get Answer"):
         if query:
-            response00 = requests.post("http://0.0.0.0:8000//context/post", json={"message": query})
-            # st.write(response00.json())
-            answer = response00.json().get("ans")
-            if(answer.lower() == "yes"):
+            # Get context: returns "Yes" or "No"
+            response00 = requests.post("http://0.0.0.0:8000/context/post", json={"message": query})
+            context_ans = response00.json().get("ans")
+            
+            if context_ans.lower() == "yes":
+                # Call endpoints for the refined answer
+                # (Assuming /rest/post and /pest/post are both used; adjust as needed)
                 response0 = requests.post("http://0.0.0.0:8000/rest/post", json={"message": query})
                 response = requests.post("http://0.0.0.0:8000/pest/post", json={"message": query})
-                response2 = requests.post("http://0.0.0.0:8000/query", json={"message": query})
-                st.write(response2.json())
-                # st.write(response0.json())
-                st.write(response.json())
-
-                response_data = response0.json()
-
-                 # Extract the "fld" field containing the transaction data
-                if "fld" in response_data:
-                    transactions = response_data["fld"]
-                else:
-                    st.error("Invalid response format: Missing 'fld' key.")
-                    return
                 
-                # Convert extracted list to DataFrame
-                df = pd.DataFrame(transactions)
-
-                # Convert Date column to datetime format
-                df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
-
-                # Fill missing values in Deposit and Withdrawal with 0
-                df["Deposit"] = df["Deposit"].fillna(0)
-                df["Withdrawal"] = df["Withdrawal"].fillna(0)
-
-                # Sort by date
-                df = df.sort_values(by="Date")
-
-                # ----- STEP 2: User Inputs for Filtering -----
-                st.sidebar.header("Filter Options")
-
-                # Date range filter
-                min_date = df['Date'].min()
-                max_date = df['Date'].max()
-                start_date = st.sidebar.date_input("Start Date", value=min_date)
-                end_date = st.sidebar.date_input("End Date", value=max_date)
-
-                # Filter DataFrame by selected dates
-                filtered_df = df[(df['Date'] >= pd.to_datetime(start_date)) & (df['Date'] <= pd.to_datetime(end_date))]
-
-                # ----- STEP 3: Display Filtered Data -----
-                st.write("### Filtered Transactions")
-                st.dataframe(filtered_df)
-
-                # ----- STEP 4: Create Interactive Graphs -----
-                if filtered_df.empty:
-                    st.warning("No transactions available for the selected filters.")
-                else:
-                    # Graph 1: Balance Over Time
-                    fig_balance = px.line(
-                        filtered_df, 
-                        x='Date', y='Balance',
-                        title="Balance Over Time",
-                        markers=True,
-                        labels={'Date': 'Date', 'Balance': 'Account Balance'}
-                    )
-                    st.plotly_chart(fig_balance, use_container_width=True)
-
-                    # Graph 2: Deposits Over Time (Bar Chart)
-                    fig_deposits = px.bar(
-                        filtered_df, 
-                        x='Date', y='Deposit',
-                        title="Deposits Over Time",
-                        labels={'Deposit': 'Deposit Amount'}
-                    )
-                    st.plotly_chart(fig_deposits, use_container_width=True)
-
-                    # Graph 3: Deposits vs Withdrawals Over Time
-                    fig_du = px.bar(
-                        filtered_df,
-                        x='Date',
-                        y=['Deposit', 'Withdrawal'],
-                        barmode='group',
-                        title="Deposits vs Withdrawals Over Time",
-                        labels={'value': 'Amount', 'variable': 'Transaction Type'}
-                    )
-                    st.plotly_chart(fig_du, use_container_width=True)
+                render_response(response)
             else:
-                st.write(answer)
+                render_response(response00)
         else:
             st.warning("Please enter a query before clicking the button.")
-
 
 def search_page():
     """New Page for Searching"""
@@ -300,6 +286,19 @@ def search_page():
                 st.warning("⚠️ No transactions found for the given inputs.")
         else:
             st.warning("⚠️ Please fill in all fields before searching.")
+            
+def dynamic_graph_page():
+    st.title("📊 Dynamic Transaction Graphs")
+    st.write("Enter a query to generate a custom graph based on transaction data.")
+    
+    user_query = st.text_input("Enter your query (e.g., 'show me monthly expenditure trends')")
+    
+    if st.button("Generate Graph"):
+        if user_query:
+            dynamic_plotting_agent(user_query)
+        else:
+            st.warning("Please enter a query.")
+
 
 def main():
     """Main function to handle navigation with sidebar"""
@@ -314,6 +313,8 @@ def main():
         search_page()
     elif page == "💬 Chat":
         chat_page()
+    elif page == "📊 Dynamic Graph":
+        dynamic_graph_page()
 
 
 if __name__ == "__main__":

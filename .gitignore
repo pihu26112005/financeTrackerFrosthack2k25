@@ -1,2 +1,7 @@
 .env 
 credentials.json
+
+Cache/
+__pycache__/
+agents/__pycache__/
+pathwayF/__pycache__/

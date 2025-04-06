@@ -1,20 +1,21 @@
+import os
 from uagents import Agent, Bureau, Context, Model
 import json
-from agents.DocumentParsingAgent import process_pdfs
-from agents.DocumentParsingAgent2 import extract_transactions, process_all_files
+# from agents.DocumentParsingAgent import process_pdfs
+# from agents.DocumentParsingAgent2 import extract_transactions, process_all_files
+from agents.DocParserAgent import process_pdf_and_extract_transactions
 from agents.GetReleventTransaction import get_relevance, get_relevant_transactions
 from agents.GetUserQueryOutput import answerQuery
 from agents.GetReleventTransactionByDate import get_filtered_transactions
 from agents.IsContextNeeded import CheckQuery
 from pathwayF.langchainPathwayClient import run
-from agents.DocToGDrive import grivePipe
 
 #kis tarah ke message se trigger hoga 
 class InputReaderAgentMessage(Model):
     message: str
 
 class InputReaderAgentMessageResponse(Model):
-    ftd: dict
+    ftd: list
 
 class ReleventDocumentAgentMessage(Model):
     # message: str
@@ -120,27 +121,61 @@ async def fetch_relevent_doc_by_date_agent(ctx: Context, message: FetchReleventD
 
 # @InputReaderParseAgent.on_message(model=InputReaderAgentMessage)
 # @InputReaderParseAgent.on_query(model=InputReaderAgentMessage)
+# @InputReaderParseAgent.on_rest_post("/nest/post",InputReaderAgentMessage,InputReaderAgentMessageResponse)
+# async def input_reader_agent(ctx: Context, message: InputReaderAgentMessage) -> InputReaderAgentMessageResponse:
+#     """
+#     Handles the input reader agent's message.
+
+#     Args:
+#         context (Context): The context of the agent.
+#         sender (str): The sender of the message.
+#         message (InputReaderAgentMessage): The message from the input reader agent.
+#     """
+    
+#     print("\n ------Parsing the input---------. \n")
+#     ptd = process_pdfs("INFO/data", message.message)
+#     ftd = process_all_files(ptd, message.message)
+#     grivePipe()
+#     # with open("INFO/processed_output.json", "w", encoding="utf-8") as outfile:
+#     #     json.dump(ftd, outfile, indent=4)
+#     print("\n ------Parsed the input successfully---------. \n")
+#     print(InputReaderParseAgent.address)
+    
+#     # await ctx.send(sender, ftd)
+#     return InputReaderAgentMessageResponse(ftd=ftd)
+# UPDATED CODE
 @InputReaderParseAgent.on_rest_post("/nest/post",InputReaderAgentMessage,InputReaderAgentMessageResponse)
 async def input_reader_agent(ctx: Context, message: InputReaderAgentMessage) -> InputReaderAgentMessageResponse:
     """
     Handles the input reader agent's message.
-
+    
+    This agent processes the given PDF file by:
+      1. Parsing the PDF into pages.
+      2. Extracting the transaction table via LLM (one call per page).
+      3. Combining transactions from all pages.
+      4. Updating the processed_output.json by Month-Year.
+      5. Uploading transaction table chunks to Google Drive.
+    
     Args:
-        context (Context): The context of the agent.
-        sender (str): The sender of the message.
-        message (InputReaderAgentMessage): The message from the input reader agent.
+        ctx (Context): The context of the agent.
+        message (InputReaderAgentMessage): The message containing the filename to process.
+    
+    Returns:
+        InputReaderAgentMessageResponse: The response containing the processed transaction data.
     """
     
     print("\n ------Parsing the input---------. \n")
-    ptd = process_pdfs("INFO/data",message.message)
-    ftd = process_all_files(ptd, message.message)
-    grivePipe()
-    # with open("INFO/processed_output.json", "w", encoding="utf-8") as outfile:
-    #     json.dump(ftd, outfile, indent=4)
+    
+    # Assume message.message contains the filename to process
+    file_name = message.message
+    file_path = os.path.join("INFO/data", file_name)
+    
+    # Call the unified function that processes the PDF and does all steps.
+    ftd = process_pdf_and_extract_transactions(file_path)
+    
     print("\n ------Parsed the input successfully---------. \n")
     print(InputReaderParseAgent.address)
     
-    # await ctx.send(sender, ftd)
     return InputReaderAgentMessageResponse(ftd=ftd)
 
 

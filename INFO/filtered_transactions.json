@@ -1,345 +1,366 @@
 [
     {
-        "Date": "01-02-2025",
-        "Particulars": "UPI/DR/503291190852/PIYUSH KU/PPIW/**86231@FAM/UPI//S BIA261AE17B77646879B30D18 8C204C9B6/01/02/2025 12:49:21",
-        "Deposit": 100.0,
-        "Withdrawal": null,
-        "Balance": 13913.0
+        "Date": "10-07-2018",
+        "Particulars": "WITHDRAWAL TRANSFER-- TRANSFER TO 31942153944",
+        "Deposit": NaN,
+        "Withdrawal": 10000.0,
+        "Balance": 67960.99
     },
     {
-        "Date": "04-02-2025",
-        "Particulars": "UPI/DR/503504035481/RELIANC E /CITI/**JIO@CITIBANK/JIO20BR 0//SBI7E4BFE80C6FB48448021 BD8B236E70E2/04/02/2025 10:16:45",
-        "Deposit": 19.0,
-        "Withdrawal": null,
-        "Balance": 13894.0
+        "Date": "20-07-2018",
+        "Particulars": "TO CLEARING-CIT BHARTI AIRTEL AP POSTPAI-323947 323947",
+        "Deposit": NaN,
+        "Withdrawal": 2714.0,
+        "Balance": 65246.99
     },
     {
-        "Date": "05-02-2025",
-        "Particulars": "UPI/DR/503650175794/ASIF HODA/SBIN/**IF123@OKSBI/UP I//SBI3B650EA3E47F4C38B1B8 D57AC88A7F27/05/02/2025 14:18:49",
-        "Deposit": 91.0,
-        "Withdrawal": null,
-        "Balance": 13803.0
+        "Date": "30-07-2018",
+        "Particulars": "TO DEBIT THROUGH CHEQUE-SBI M VENKATESWARA REDDY 30902590252-367952 367952",
+        "Deposit": NaN,
+        "Withdrawal": 10000.0,
+        "Balance": 55246.99
     },
     {
-        "Date": "05-02-2025",
-        "Particulars": "UPI/DR/503650280687/BHUPES H 14:18:49",
-        "Deposit": 91.0,
-        "Withdrawal": null,
-        "Balance": 13803.0
+        "Date": "31-07-2018",
+        "Particulars": "BY TRANSFER- 8280782906036 21BZ3SB IOC Ref No3000072780- TRANSFER FROM 4599399105213",
+        "Deposit": 305.83,
+        "Withdrawal": NaN,
+        "Balance": 55552.82
     },
     {
-        "Date": "05-02-2025",
-        "Particulars": "UPI/DR/503650280687/BHUPES H Y/PPIW/**89434@FAM/UPI//SBI C94E7E5D68F24460B8E7D8CB 686619C8/05/02/2025 14:20:11",
-        "Deposit": 22.0,
-        "Withdrawal": null,
-        "Balance": 13781.0
+        "Date": "10-08-2018",
+        "Particulars": "WITHDRAWAL TRANSFER-- TRANSFER TO 31942153944",
+        "Deposit": NaN,
+        "Withdrawal": 10000.0,
+        "Balance": 45552.82
     },
     {
-        "Date": "05-02-2025",
-        "Particulars": "UPI/DR/503650342942/PIYUSH KU/PPIW/**86231@FAM/UPI//S BI0377D7B0C92E493F9554F7A 1B0A90E28/05/02/2025 14:21:20",
-        "Deposit": 180.0,
-        "Withdrawal": null,
-        "Balance": 13601.0
+        "Date": "10-08-2018",
+        "Particulars": "BY TRANSFER-INB IMPS822208411175/22222222 22/XX0317/Remitly Tr- MAB00015001327 7 MAB00015001327 7",
+        "Deposit": 200000.0,
+        "Withdrawal": NaN,
+        "Balance": 245552.82
     },
     {
-        "Date": "05-02-2025",
-        "Particulars": "UPI/DR/503668256087/BHUPES H Y/PPIW/**89434@FAM/UPI//SBI 80C701F701744F4FB6229AE86 6AE65DF/05/02/2025 22:42:02",
-        "Deposit": 210.0,
-        "Withdrawal": null,
-        "Balance": 13391.0
+        "Date": "10-08-2018",
+        "Particulars": "BY TRANSFER-INB IMPS822217573306/22222222 22/XX0317/Remitly Tr- MAC00015021678 5 MAC00015021678 5",
+        "Deposit": 50000.0,
+        "Withdrawal": NaN,
+        "Balance": 295552.82
     },
     {
-        "Date": "06-02-2025",
-        "Particulars": "UPI/CR/503756256175/LAVAKU SH /CNRB/**87518@PTHDFC/SENT USI//PTMEB64F4786A0E41F79 EE2E66F961D90C8/06/02/2025 13:40:25",
-        "Deposit": 2.48,
-        "Withdrawal": null,
-        "Balance": 13393.48
+        "Date": "23-08-2018",
+        "Particulars": "BY TRANSFER-INB IMPS823522400136/22222222 22/XX0317/Remitly Tr- MAC00015533779 9 MAC00015533779 9",
+        "Deposit": 200000.0,
+        "Withdrawal": NaN,
+        "Balance": 495552.82
     },
     {
-        "Date": "06-02-2025",
-        "Particulars": "UPI/DR/503718205476/PIYUSH KU/PPIW/**86231@FAM/UPI//S BI550D2C0F1418401788153693 83E23C3C/06/02/2025 22:01:37",
-        "Deposit": 1.0,
-        "Withdrawal": null,
-        "Balance": 13392.48
+        "Date": "24-08-2018",
+        "Particulars": "CASH CHEQUE-CASH WITHDRAWAL BY CHEQUE- 367954 367954",
+        "Deposit": NaN,
+        "Withdrawal": 400000.0,
+        "Balance": 95552.82
     },
     {
-        "Date": "09-02-2025",
-        "Particulars": "UPI/DR/504094090896/HIMACH AL /INDB/**05637@INDUS/UPI//AXI BCF58C4750B146E7AA7B8C79 7CC82EAB/09/02/2025 19:32:18",
-        "Deposit": 85.0,
-        "Withdrawal": null,
-        "Balance": 13307.48
+        "Date": "28-08-2018",
+        "Particulars": "BY TRANSFER-INB IMPS824019717310/22222222 22/XX0317/Remitly Tr- MAA00016919300 9 MAA00016919300 9",
+        "Deposit": 200000.0,
+        "Withdrawal": NaN,
+        "Balance": 295552.82
     },
     {
-        "Date": "09-02-2025",
-        "Particulars": "UPI/DR/504067944626/BHUPES H Y/PPIW/**89434@FAM/UPI//SBI C42828C37B6F42508DC1B5E22 085956F/09/02/2025 20:14:43",
-        "Deposit": 20.0,
-        "Withdrawal": null,
-        "Balance": 13287.48
+        "Date": "29-08-2018",
+        "Particulars": "CHEQUE WDL-WITHDRAWAL TRANSFER BY CHEQUE- 367955 TRANSFER FROM 10111159879 / 367955",
+        "Deposit": NaN,
+        "Withdrawal": 200000.0,
+        "Balance": 95552.82
+    },
+    {
+        "Date": "01-09-2018",
+        "Particulars": "CHEQUE WDL- CHQ TR- 367956 TRANSFER FROM 10111159879 / 367956",
+        "Deposit": NaN,
+        "Withdrawal": 42000.0,
+        "Balance": 53552.82
+    },
+    {
+        "Date": "10-09-2018",
+        "Particulars": "WITHDRAWAL TRANSFER-- TRANSFER TO 31942153944",
+        "Deposit": NaN,
+        "Withdrawal": 10000.0,
+        "Balance": 43552.82
+    },
+    {
+        "Date": "25-09-2018",
+        "Particulars": "CREDIT INTEREST",
+        "Deposit": 912.0,
+        "Withdrawal": NaN,
+        "Balance": 44464.82
+    },
+    {
+        "Date": "03-10-2018",
+        "Particulars": "BULK POSTING-18077478825 ITD TAX REFUND AY 18-19 PAN AFWPM8591B-",
+        "Deposit": 25590.0,
+        "Withdrawal": NaN,
+        "Balance": 70054.82
+    },
+    {
+        "Date": "05-10-2018",
+        "Particulars": "BY TRANSFER-RTGS UTR NO: YESBR52018100558140100- 2221 boles st TRANSFER FROM 3199860044304 / 2221 boles st",
+        "Deposit": 362700.0,
+        "Withdrawal": NaN,
+        "Balance": 432754.82
+    },
+    {
+        "Date": "05-10-2018",
+        "Particulars": "CHEQUE WDL-WITHDRAWAL TRANSFER BY CHEQUE- 367957 TRANSFER FROM 10111159879 / 367957",
+        "Deposit": NaN,
+        "Withdrawal": 400000.0,
+        "Balance": 32754.82
+    },
+    {
+        "Date": "09-10-2018",
+        "Particulars": "BULK POSTING-ACHCr UBIN00072000013390 BHARATSANCHARN-",
+        "Deposit": 2454.0,
+        "Withdrawal": NaN,
+        "Balance": 35208.82
+    },
+    {
+        "Date": "10-10-2018",
+        "Particulars": "WITHDRAWAL TRANSFER-- TRANSFER TO 31942153944",
+        "Deposit": NaN,
+        "Withdrawal": 10000.0,
+        "Balance": 25208.82
+    },
+    {
+        "Date": "16-10-2018",
+        "Particulars": "BY TRANSFER-INB Gift to relatives / Friends- ITT1756247 TRANSFER FROM 10111159879",
+        "Deposit": 150000.0,
+        "Withdrawal": NaN,
+        "Balance": 175208.82
+    },
+    {
+        "Date": "11-01-2025",
+        "Particulars": "REV : SLABWISE NMMB\nCHARGESDUE DT:01-MAR-23\n15-JUN-23",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
+        "Balance": 17027.0
+    },
+    {
+        "Date": "12-01-2025",
+        "Particulars": "UPI/DR/537855179837/ANSHUL\nME/AIRP/**51378@PTHDFC/UPI\n//AXI72278714308844D1A612B6\nC415568197/12/01/2025\n18:17:58",
+        "Deposit": NaN,
+        "Withdrawal": 840.0,
+        "Balance": 16187.0
+    },
+    {
+        "Date": "15-01-2025",
+        "Particulars": "UPI/DR/501585803950/LAVAKU\nSH\n/CNRB/**87518@PTAXIS/UPI//A\nXI8CF60F98A3224B0DA28BA23\n7120EC95B/15/01/2025 15:41:56",
+        "Deposit": NaN,
+        "Withdrawal": 5000.0,
+        "Balance": 11187.0
+    },
+    {
+        "Date": "15-01-2025",
+        "Particulars": "IV SEM FEES:162001073173",
+        "Deposit": 29160.0,
+        "Withdrawal": NaN,
+        "Balance": 40347.0
+    },
+    {
+        "Date": "15-01-2025",
+        "Particulars": "UPI/DR/100071877942/INDIAN\nIN/SBIN/**01984@SBI/COLLECT\n//SBI58958477506A4F43B66FD\nC16E734BF40/15/01/2025\n17:23:27",
+        "Deposit": NaN,
+        "Withdrawal": 6200.0,
+        "Balance": 34147.0
+    },
+    {
+        "Date": "15-01-2025",
+        "Particulars": "UPI/DR/100071882944/INDIAN\nIN/SBIN/**01984@SBI/COLLECT\n//SBI123E2A1D47A64A059358E\n7F429ABE52F/15/01/2025\n17:26:06",
+        "Deposit": NaN,
+        "Withdrawal": 24960.0,
+        "Balance": 9187.0
+    },
+    {
+        "Date": "15-01-2025",
+        "Particulars": "UPI/DR/501561442769/PIYUSH\nKU/PPIW/**86231@FAM/UPI//A\nXI4C556AFAFCE84D9B834EF65\n6E22A19D1/15/01/2025 23:53:06",
+        "Deposit": NaN,
+        "Withdrawal": 350.0,
+        "Balance": 8837.0
+    },
+    {
+        "Date": "20-01-2025",
+        "Particulars": "UPI/DR/538671254690/INDIAN\nIN/SBIN/**08124@SBI/UPI//AXI9\nA32C7117E994F07B26971B3F5\n3E02CE/20/01/2025 14:28:17",
+        "Deposit": NaN,
+        "Withdrawal": 850.0,
+        "Balance": 7987.0
+    },
+    {
+        "Date": "23-01-2025",
+        "Particulars": "UPI/DR/502307058660/ASIF\nHODA/SBIN/**IF123@OKSBI/UP\nI//SBI776AFA4ECC03475C94F1\n9CDE25D81CBA/23/01/2025\n12:00:40",
+        "Deposit": NaN,
+        "Withdrawal": 300.0,
+        "Balance": 7687.0
+    },
+    {
+        "Date": "23-01-2025",
+        "Particulars": "NEFT CR-HDFCH00019314065-\nHDFC0000240-\nPHYSICSWALLAH PRIVATE\nLIMITED--NEFT    8244393\n50200058740094   PH",
+        "Deposit": 6300.0,
+        "Withdrawal": NaN,
+        "Balance": 13987.0
+    },
+    {
+        "Date": "31-01-2025",
+        "Particulars": "UPI/DR/539789254178/KANSHI\nRA/YESB/**48411@YBL/UPI//AX\nIC35AD80A4E974F1A9684111F\nF53B6C5D/31/01/2025 12:03:34",
+        "Deposit": NaN,
+        "Withdrawal": 91.0,
+        "Balance": 13896.0
     },
     {
         "Date": "10-02-2025",
-        "Particulars": "C42828C37B6F42508DC1B5E22 085956F/09/02/2025 20:14:43",
-        "Deposit": 20.0,
-        "Withdrawal": null,
-        "Balance": 13287.48
-    },
-    {
-        "Date": "10-02-2025",
-        "Particulars": "UPI/DR/540765173405/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 24BE3040AF104AEFB531F0C39 3150462/10/02/2025 19:47:03",
-        "Deposit": 95.0,
-        "Withdrawal": null,
-        "Balance": 13192.48
-    },
-    {
-        "Date": "10-02-2025",
-        "Particulars": "UPI/DR/540700390893/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 3CCF90F0187C468389657EA0B 1E0D744/10/02/2025 21:05:49",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/540700390893/HIMACHAL/INDB/**05637@INDUS/UPI//AXI3CCF90F0187C468389657EA0B1E0D744/10/02/2025 21:05:49\nChq: 540700390893",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 13172.48
     },
     {
         "Date": "11-02-2025",
-        "Particulars": "UPI/DR/504252384754/BHUPES H Y/PPIW/**89434@FAM/UPI//SBI 971BAB6902234CCF9B76DB08 694241D1/11/02/2025 23:50:21",
-        "Deposit": 50.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504252384754/BHUPESHY/PPIW/**89434@FAM/UPI//SBI971BAB6902234CCF9B76DB08694241D1/11/02/2025 23:50:21\nChq: 504252384754",
+        "Deposit": NaN,
+        "Withdrawal": 50.0,
         "Balance": 13122.48
     },
     {
         "Date": "11-02-2025",
-        "Particulars": "UPI/DR/504252377311/ASIF HODA/SBIN/**IF123@OKSBI/UP I//SBI3BB80FB47A46478F9BD20 999420C3A3A/11/02/2025 23:50:56",
-        "Deposit": 25.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504252377311/ASIFHODA/SBIN/**IF123@OKSBI/UPI//SBI3BB80FB47A46478F9BD20999420C3A3A/11/02/2025\n23:50:56\nChq: 504252377311",
+        "Deposit": NaN,
+        "Withdrawal": 25.0,
         "Balance": 13097.48
     },
     {
         "Date": "12-02-2025",
-        "Particulars": "UPI/DR/540924023085/HIMACH AL /INDB/**05637@INDUS/UPI//AXI B151B8B72AD047BBAAB7B3F0 EB942764/12/02/2025 17:23:27",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/540924023085/HIMACHAL/INDB/**05637@INDUS/UPI//AXIB151B8B72AD047BBAAB7B3F0EB942764/12/02/2025 17:23:27\nChq: 540924023085",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 13077.48
     },
     {
         "Date": "14-02-2025",
-        "Particulars": "UPI/DR/504541387671/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 41F6F446CD964B559D5024078 3E38663/14/02/2025 18:36:17",
-        "Deposit": 50.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504541387671/HIMACHAL/INDB/**05637@INDUS/UPI//AXI41F6F446CD964B559D50240783E38663/14/02/2025 18:36:17\nChq: 504541387671",
+        "Deposit": NaN,
+        "Withdrawal": 50.0,
         "Balance": 13027.48
     },
     {
         "Date": "14-02-2025",
-        "Particulars": "UPI/DR/504587292079/LAVAKU SH /CNRB/**87518@PTHDFC/UPI// SBIE42222905AE84230A01C5E 42FB3C5B1F/14/02/2025 22:31:08",
-        "Deposit": 1.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504587292079/LAVAKUSH/CNRB/**87518@PTHDFC/UPI//SBIE42222905AE84230A01C5E42FB3C5B1F/14/02/2025\n22:31:08\nChq: 504587292079",
+        "Deposit": NaN,
+        "Withdrawal": 1.0,
         "Balance": 13026.48
     },
     {
         "Date": "14-02-2025",
-        "Particulars": "UPI/DR/504587086874/LAVAKU SH /CNRB/**87518@PTHDFC/UPI// SBIB61B38191F994133B65ADC 9B879BECB0/14/02/2025 22:31:52",
-        "Deposit": 5000.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504587086874/LAVAKUSH/CNRB/**87518@PTHDFC/UPI//SBIB61B38191F994133B65ADC9B879BECB0/14/02/2025\n22:31:52\nChq: 504587086874",
+        "Deposit": NaN,
+        "Withdrawal": 5000.0,
         "Balance": 8026.48
     },
     {
         "Date": "15-02-2025",
-        "Particulars": "UPI/DR/541296257715/HIMACH AL /INDB/**05637@INDUS/UPI//AXI C88D91C5962644BDB1B7FBC5 BCD49A53/15/02/2025 17:04:41",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/541296257715/HIMACHAL/INDB/**05637@INDUS/UPI//AXIC88D91C5962644BDB1B7FBC5BCD49A53/15/02/2025 17:04:41\nChq: 541296257715",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 8006.48
     },
     {
         "Date": "15-02-2025",
-        "Particulars": "UPI/DR/541240995522/BIRI SIN/SBIN/**67743@OKICICI/UPI //AXIFBB79B60DDD647C39C87 06CE4981C6F8/15/02/2025 23:46:57",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/541240995522/BIRISIN/SBIN/**67743@OKICICI/UPI//AXIFBB79B60DDD647C39C8706CE4981C6F8/15/02/2025\n23:46:57\nChq: 541240995522",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 7986.48
     },
     {
         "Date": "16-02-2025",
-        "Particulars": "UPI/DR/504748512436/SUNIL KUM/YESB/**HNN24@PAYTM/U PI//SBI1E25057D51B8460493AE 91DECE4DE974/16/02/2025 10:55:51",
-        "Deposit": 60.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504748512436/SUNILKUM/YESB/**HNN24@PAYTM/UPI//SBI1E25057D51B8460493AE91DECE4DE974/16/02/2025\n10:55:51\nChq: 504748512436",
+        "Deposit": NaN,
+        "Withdrawal": 60.0,
         "Balance": 7926.48
     },
     {
         "Date": "16-02-2025",
-        "Particulars": "UPI/DR/504704723558/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 32B40B0B621444438F28D86D9 EAE4BD0/16/02/2025 14:47:59",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504704723558/HIMACHAL/INDB/**05637@INDUS/UPI//AXI32B40B0B621444438F28D86D9EAE4BD0/16/02/2025 14:47:59\nChq: 504704723558",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 7906.48
     },
     {
         "Date": "16-02-2025",
-        "Particulars": "UPI/DR/504754159505/HIMACH AL /INDB/**05637@INDUS/UPI//AXI F11603EF6F9543028D21DB347 4058423/16/02/2025 20:04:09",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504754159505/HIMACHAL/INDB/**05637@INDUS/UPI//AXIF11603EF6F9543028D21DB3474058423/16/02/2025 20:04:09\nChq: 504754159505",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 7886.48
     },
     {
         "Date": "17-02-2025",
-        "Particulars": "NEFT CR-HDFCH00068047511- HDFC0000240- PHYSICSWALLAH PRIVATE LIMITED--NEFT    8265746 50200058740094   PH",
+        "Particulars": "NEFT CR-HDFCH00068047511-HDFC0000240-PHYSICSWALLAH PRIVATE LIMITED--NEFT    8265746\n50200058740094   PH\nChq: 0",
         "Deposit": 7200.0,
-        "Withdrawal": null,
+        "Withdrawal": NaN,
         "Balance": 15086.48
     },
     {
         "Date": "17-02-2025",
-        "Particulars": "LIMITED--NEFT    8265746 50200058740094   PH",
-        "Deposit": 7200.0,
-        "Withdrawal": null,
-        "Balance": 15086.48
-    },
-    {
-        "Date": "17-02-2025",
-        "Particulars": "UPI/DR/504896699167/TARA CHA/YESB/**96876@YBL/UPI// AXIAEE82D91DB7647C79E080 AC8FC1F5DBD/17/02/2025 15:09:56",
-        "Deposit": 90.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/504896699167/TARACHA/YESB/**96876@YBL/UPI//AXIAEE82D91DB7647C79E080AC8FC1F5DBD/17/02/2025\n15:09:56\nChq: 504896699167",
+        "Deposit": NaN,
+        "Withdrawal": 90.0,
         "Balance": 14996.48
     },
     {
-        "Date": "19-02-2025",
-        "Particulars": "UPI/DR/505065679314/RELIANC E /CITI/**JIO@CITIBANK/JIO20BR 0//SBIB3B5E24C632B43BFAD3 AD4A5F6396F96/19/02/2025 21:47:49",
-        "Deposit": 299.0,
-        "Withdrawal": null,
-        "Balance": 14697.48
-    },
-    {
-        "Date": "20-02-2025",
-        "Particulars": "UPI/DR/505104412327/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 8B257D9014234CCAB45BF5D2 B279C241/20/02/2025 22:56:18",
-        "Deposit": 20.0,
-        "Withdrawal": null,
-        "Balance": 14677.48
-    },
-    {
-        "Date": "20-02-2025",
-        "Particulars": "UPI/DR/505101218495/ANSHUL ME/HDFC/**51378@PTHDFC/U PI//SBI21C0AF4B53D2472DB5C C5126B5B8127D/20/02/2025 22:59:20",
-        "Deposit": 299.0,
-        "Withdrawal": null,
-        "Balance": 14378.48
-    },
-    {
-        "Date": "21-02-2025",
-        "Particulars": "UPI/DR/505215336057/SIDDHA NT /SBIN/**AH469@OKSBI/UPI//AXI D763AD8AAE564D6E801C4799 840B861E/21/02/2025 10:10:54",
-        "Deposit": 2000.0,
-        "Withdrawal": null,
-        "Balance": 12378.48
-    },
-    {
-        "Date": "21-02-2025",
-        "Particulars": "UPI/DR/505242231970/BHUPES H Y/PPIW/**89434@FAM/UPI//AXI 094419C48D6A4EFB8E0930084 B6D45C6/21/02/2025 10:12:53",
-        "Deposit": 40.0,
-        "Withdrawal": null,
-        "Balance": 12338.48
-    },
-    {
-        "Date": "22-02-2025",
-        "Particulars": "UPI/DR/505356616117/SIDDHA NT /SBIN/**AH469@OKSBI/UPI//SBI 53211F018188490BB6BABB3E9 721B91B/22/02/2025 15:49:09 Chq: 505356616117 /SBIN/**AH469@OKSBI/UPI//SBI 53211F018188490BB6BABB3E9 721B91B/22/02/2025 15:49:09",
-        "Deposit": 20.0,
-        "Withdrawal": null,
-        "Balance": 12318.48
-    },
-    {
-        "Date": "22-02-2025",
-        "Particulars": "UPI/DR/541956778427/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 82A899180BCC42A886AF1ACF CB90C8C7/22/02/2025 21:41:39",
-        "Deposit": 60.0,
-        "Withdrawal": null,
-        "Balance": 12258.48
-    },
-    {
-        "Date": "23-02-2025",
-        "Particulars": "UPI/DR/505495220465/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 04332F80E3D340458A410E5BB DDDE94C/23/02/2025 17:53:21",
-        "Deposit": 130.0,
-        "Withdrawal": null,
-        "Balance": 12128.48
-    },
-    {
-        "Date": "23-02-2025",
-        "Particulars": "UPI/DR/505488750731/HIMACH AL /INDB/**05637@INDUS/UPI//AXI C89B7303012F4796BB78BC523 66C0573/23/02/2025 21:06:35",
-        "Deposit": 90.0,
-        "Withdrawal": null,
-        "Balance": 12038.48
-    },
-    {
-        "Date": "24-02-2025",
-        "Particulars": "UPI/CR/505540459933/SIDDHA NT /SBIN/**AH469@OKSBI/UPI//SBI 1E237FD6A9D6495688B037D23 BFAE69C/24/02/2025 13:36:31",
-        "Deposit": 2160.0,
-        "Withdrawal": null,
-        "Balance": 14198.48
-    },
-    {
-        "Date": "24-02-2025",
-        "Particulars": "UPI/DR/542114922700/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 4FB645FB74B24286914EC0B3C 3A34411/24/02/2025 21:07:00",
-        "Deposit": 40.0,
-        "Withdrawal": null,
-        "Balance": 14158.48
-    },
-    {
-        "Date": "26-02-2025",
-        "Particulars": "UPI/CR/505728755849/ASIF HODA/SBIN/**IF123@OKSBI/UP I//SBIA6BA5A3DCDCE4CD7827 02FAB8C3B9B2B/26/02/2025 14:19:38",
-        "Deposit": 40.0,
-        "Withdrawal": null,
-        "Balance": 14198.48
-    },
-    {
-        "Date": "26-02-2025",
-        "Particulars": "UPI/DR/505702070854/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 29C7235F0414457FB93ECA6D2 6C45F63/26/02/2025 19:29:57",
-        "Deposit": 40.0,
-        "Withdrawal": null,
-        "Balance": 14158.48
-    },
-    {
         "Date": "27-02-2025",
-        "Particulars": "UPI/DR/505826099057/HIMACH AL /INDB/**05637@INDUS/UPI//AXI EF43B41778024FDAB5E745174 9C3FD75/27/02/2025 14:06:31",
-        "Deposit": 30.0,
-        "Withdrawal": null,
-        "Balance": 14128.48
-    },
-    {
-        "Date": "27-02-2025",
-        "Particulars": "UPI/DR/505894141763/RELIANC E /CITI/**JIO@CITIBANK/JIO20BR 0//SBIA04886F1147E444A82877 DBA7FBE2CE6/27/02/2025 18:12:05",
-        "Deposit": 349.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/505894141763/RELIANCE/CITI/**JIO@CITIBANK/JIO20BR0//SBIA04886F1147E444A82877DBA7FBE2CE6",
+        "Deposit": NaN,
+        "Withdrawal": 349.0,
         "Balance": 13779.48
     },
     {
         "Date": "27-02-2025",
-        "Particulars": "UPI/DR/542475034908/HIMACH AL /INDB/**05637@INDUS/UPI//AXI 6CFEB01511C34DFDB89377FE 51E03E51/27/02/2025 21:36:38",
-        "Deposit": 50.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/542475034908/HIMACHAL/INDB/**05637@INDUS/UPI//AXI6CFEB01511C34DFDB89377FE51E03E51",
+        "Deposit": NaN,
+        "Withdrawal": 50.0,
         "Balance": 13729.48
     },
     {
         "Date": "27-02-2025",
-        "Particulars": "UPI/DR/542439740252/ANSHUL ME/HDFC/**51378@PTHDFC/U PI//AXIA26E2A00F6B2441A8B8 B000103C3C6BC/27/02/2025 23:12:16",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/542439740252/ANSHULME/HDFC/**51378@PTHDFC/UPI//AXIA26E2A00F6B2441A8B8B000103C3C6BC",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 13709.48
     },
     {
         "Date": "27-02-2025",
-        "Particulars": "UPI/CR/807826980585/GOOGLE IN/UTIB/**MENTS@AXISBANK/ REWARDED//AXI6A0A098DD0E 54B4092EFC2C67A2AE90E/27/0 2/2025 23:12:45",
+        "Particulars": "UPI/CR/807826980585/GOOGLEIN/UTIB/**MENTS@AXISBANK/REWARDED//AXI6A0A098DD0E54B4092EFC2C67A2AE90E",
         "Deposit": 15.0,
-        "Withdrawal": null,
+        "Withdrawal": NaN,
         "Balance": 13724.48
     },
     {
         "Date": "27-02-2025",
-        "Particulars": "UPI/CR/505819480763/ANSHUL ME/HDFC/**51378@PTHDFC/S ENT USI//PTMB6C9A47EFDA14A05A 41A18C2DEA6852C/27/02/2025 23:13:40",
+        "Particulars": "UPI/CR/505819480763/ANSHULME/HDFC/**51378@PTHDFC/SENTUSI//PTMB6C9A47EFDA14A05A41A18C2DEA6852C",
         "Deposit": 10.0,
-        "Withdrawal": null,
+        "Withdrawal": NaN,
         "Balance": 13734.48
     },
     {
         "Date": "28-02-2025",
-        "Particulars": "UPI/DR/505921511308/SIDDHA NT /SBIN/**AH469@OKSBI/UPI//SBI 1FE8407D8FD64A32B1849CE1 B7895145/28/02/2025 11:47:36 Chq: 505921511308 /SBIN/**AH469@OKSBI/UPI//SBI 1FE8407D8FD64A32B1849CE1 B7895145/28/02/2025 11:47:36",
-        "Deposit": 20.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/505921511308/SIDDHANT/SBIN/**AH469@OKSBI/UPI//SBI1FE8407D8FD64A32B1849CE1B7895145",
+        "Deposit": NaN,
+        "Withdrawal": 20.0,
         "Balance": 13714.48
     },
     {
         "Date": "28-02-2025",
-        "Particulars": "UPI/DR/542549454787/HIMACH AL /INDB/**05637@INDUS/UPI//AXI F5E75EF0D52242AD8C20F9287 8F81D8F/28/02/2025 12:09:13",
-        "Deposit": 85.0,
-        "Withdrawal": null,
+        "Particulars": "UPI/DR/542549454787/HIMACHAL/INDB/**05637@INDUS/UPI//AXIF5E75EF0D52242AD8C20F92878F81D8F",
+        "Deposit": NaN,
+        "Withdrawal": 85.0,
         "Balance": 13629.48
     }
 ]
