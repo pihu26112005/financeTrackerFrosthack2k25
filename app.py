@@ -1,9 +1,13 @@
 import streamlit as st
 import requests
 import os
+from typing import List
 import plotly.express as px
+import plotly.io as pio
 import pandas as pd
 import json
+from utils.DriveJSONRetriever import retrieve_data_from_gdrive
+
 
 def render_response(response):
     try:
@@ -31,6 +35,7 @@ def render_response(response):
             with st.expander("Show Model Thought Process"):
                 for t in thoughts:
                     st.write(t)
+        return final_answer
 
     except Exception as e:
         st.error(f"Error processing response: {e}")
@@ -85,7 +90,7 @@ def upload_page():
             # Loop over each filename and send an individual call
             for fname in st.session_state["uploaded_filenames"]:
                 response = requests.post(
-                    "http://0.0.0.0:8000/nest/post",
+                    "http://0.0.0.0:8002/parse",
                     json={"message": fname}
                 )
                 responses.append(response.json())
@@ -103,6 +108,7 @@ def upload_page():
     if os.path.exists(json_path):
         with open(json_path, "r") as f:
             data = json.load(f)  # Load JSON file
+        # data = retrieve_data_from_gdrive('processed_output.json')
 
         # Show dropdown to select a file (Month)
         pdf_names = list(data.keys())
@@ -130,8 +136,8 @@ def upload_page():
                 df["Withdrawal"] = df["Withdrawal"].fillna(0)
 
                 fig_bar = px.bar(df, x="Date", y=["Deposit", "Withdrawal"], 
-                                 title="Deposits & Withdrawals", 
-                                 barmode="group")
+                                    title="Deposits & Withdrawals", 
+                                    barmode="group")
                 st.plotly_chart(fig_bar)
 
                 # 3️⃣ Area Chart: Cumulative Deposits & Withdrawals
@@ -140,7 +146,7 @@ def upload_page():
                 df["Cumulative Withdrawal"] = df["Withdrawal"].cumsum()
 
                 fig_area = px.area(df, x="Date", y=["Cumulative Deposit", "Cumulative Withdrawal"],
-                                   title="Cumulative Deposits vs Withdrawals")
+                                    title="Cumulative Deposits vs Withdrawals")
                 st.plotly_chart(fig_area)
 
                 # 4️⃣ Histogram: Transactions Per Day
@@ -157,38 +163,38 @@ def upload_page():
         st.warning("⚠️ Processed transaction data not found!")
 
 
-def query_page():
-    """Page for querying transactions"""
-    st.title("🔍 Query Transactions")
+# def query_page():
+#     """Page for querying transactions"""
+#     st.title("🔍 Query Transactions")
 
-    query = st.text_input("🔎 Enter your query")
+#     query = st.text_input("🔎 Enter your query")
 
-    if st.button("📌 Get Relevant Transactions"):
-        if query:
-            response = requests.post("http://0.0.0.0:8000/rest/post", json={"message": query})
-            data = response.json()
+#     if st.button("📌 Get Relevant Transactions"):
+#         if query:
+#             response = requests.post("http://0.0.0.0:8000/rest/post", json={"message": query})
+#             data = response.json()
 
-            if "fld" in data and isinstance(data["fld"], list) and len(data["fld"]) > 0:
-                transactions = data["fld"]
+#             if "fld" in data and isinstance(data["fld"], list) and len(data["fld"]) > 0:
+#                 transactions = data["fld"]
                 
-                # Convert to DataFrame
-                df = pd.DataFrame(transactions)
-                df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
+#                 # Convert to DataFrame
+#                 df = pd.DataFrame(transactions)
+#                 df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
 
-                # Show transactions in table format
-                st.subheader("📜 Query Results")
-                st.dataframe(df)
+#                 # Show transactions in table format
+#                 st.subheader("📜 Query Results")
+#                 st.dataframe(df)
 
-                # Line Chart: Balance Over Time
-                st.subheader("📈 Balance Trend")
-                fig_balance = px.line(df, x="Date", y="Balance", title="Balance Trend", markers=True)
-                st.plotly_chart(fig_balance)
+#                 # Line Chart: Balance Over Time
+#                 st.subheader("📈 Balance Trend")
+#                 fig_balance = px.line(df, x="Date", y="Balance", title="Balance Trend", markers=True)
+#                 st.plotly_chart(fig_balance)
 
-            else:
-                st.warning("⚠️ No transactions found for your query!")
+#             else:
+#                 st.warning("⚠️ No transactions found for your query!")
 
-        else:
-            st.warning("⚠️ Please enter a query before clicking the button.")
+#         else:
+#             st.warning("⚠️ Please enter a query before clicking the button.")
 
     # if st.button("Get Answer"):
     #     if query:
@@ -198,10 +204,19 @@ def query_page():
     #         st.warning("Please enter a query before clicking the button.")
 
 def chat_page():
-    """Page for chatting with the model"""
-    st.title("Chat with Model")
+    """Page for chatting with your Finance Agent"""
+    st.title("Chat with your Finance Agent")
 
     query = st.text_input("Enter your query")
+    
+    # New checkbox to decide whether to generate graphs
+    visualize = st.checkbox("Visualize data", value=False)
+    # Checkbox to optionally display the fetched transactions
+    show_transactions = st.checkbox("Show transactions", value=False)
+
+    
+    response0 = None  # define here for later use
+
 
     if st.button("Get Answer"):
         if query:
@@ -212,109 +227,184 @@ def chat_page():
             if context_ans.lower() == "yes":
                 # Call endpoints for the refined answer
                 # (Assuming /rest/post and /pest/post are both used; adjust as needed)
-                response0 = requests.post("http://0.0.0.0:8000/rest/post", json={"message": query})
-                response = requests.post("http://0.0.0.0:8000/pest/post", json={"message": query})
+                response0 = requests.post("http://0.0.0.0:8003/rest/post", json={"message": query})
+                response = requests.post("http://0.0.0.0:8004/pest/post", json={"message": query})
                 
-                render_response(response)
+                answer_text = render_response(response)
             else:
-                render_response(response00)
+                answer_text = render_response(response00)
+            
+            # If we received a valid chat answer, send it to the graphing agent.
+            if answer_text:
+                if visualize:
+                    st.info("Generating graphs...")
+                    graph_message = (
+                        f"User Query: {query}\n"
+                        f"Chat Answer: {answer_text}\n"
+                        "Generate multiple relevant graphs (e.g., line charts, bar charts, pie charts, histograms) that best represent the underlying transaction data."
+                    )
+                    graph_response = requests.post("http://0.0.0.0:8001/graph", json={"message": graph_message})
+                    try:
+                        graph_data = graph_response.json()
+                    except Exception as e:
+                        st.error("Error parsing graph response: " + str(e))
+                        return
+                    if "graphs" in graph_data:
+                        graphs_list = graph_data["graphs"]
+                        if not isinstance(graphs_list, list):
+                            graphs_list = [graphs_list]
+                        st.write(f"Generated {len(graphs_list)} graphs:")
+                        for i, graph_json in enumerate(graphs_list):
+                            try:
+                                # Try to parse the graph JSON string
+                                parsed_graph = json.loads(graph_json)
+                                # If it's an error message, display it and skip rendering.
+                                if isinstance(parsed_graph, dict) and "error" in parsed_graph:
+                                    st.error(f"Graph {i+1} error: {parsed_graph['error']}")
+                                    continue
+                                # # Otherwise, try to render the figure.
+                                fig = pio.from_json(graph_json)
+                                st.plotly_chart(fig)
+                            except Exception as e:
+                                st.error(f"Error rendering graph {i+1}: {e}")
+                    else:
+                        st.error("Graph data not found in response.")
+                else:
+                    st.info("Graph visualization disabled.")
+                    
+                # ✅ Show transactions if requested
+                if show_transactions and response0:
+                    data = response0.json()
+                    if "fld" in data and isinstance(data["fld"], list) and len(data["fld"]) > 0:
+                        transactions = data["fld"]
+                        df = pd.DataFrame(transactions)
+                        try:
+                            df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
+                        except Exception:
+                            pass
+                        st.subheader("📜 Relevant Transactions")
+                        st.dataframe(df)
+                    else:
+                        st.warning("⚠️ No transactions found.")
+            else:
+                st.error("No answer received from chat agent to generate graphs.")
         else:
             st.warning("Please enter a query before clicking the button.")
 
-def search_page():
-    """New Page for Searching"""
-    st.header("🔍 Search Transactions")
 
-    key = st.text_input("📂 Key / Month (e.g., mar_2025.pdf)")
-    start_date = st.text_input("📅 Start Date (DD-MM-YYYY)")
-    end_date = st.text_input("📅 End Date (DD-MM-YYYY)")
 
-    if st.button("🚀 Search"):
-        if key and start_date and end_date:
-            response = requests.post(
-                "http://0.0.0.0:8000/search", 
-                json={"key": key, "start_date": start_date, "end_date": end_date}
-            )
-            data = response.json()  
+# def search_page():
+#     """New Page for Searching"""
+#     st.header("🔍 Search Transactions")
 
-            # Extract transactions from "filtered_transactions" key
-            transactions = data.get("filtered_transactions", [])
+#     key = st.text_input("📂 Key / Month (e.g., mar_2025.pdf)")
+#     start_date = st.text_input("📅 Start Date (DD-MM-YYYY)")
+#     end_date = st.text_input("📅 End Date (DD-MM-YYYY)")
 
-            if isinstance(transactions, list) and len(transactions) > 0:
-                df = pd.DataFrame(transactions)  # Convert JSON to DataFrame
+#     if st.button("🚀 Search"):
+#         if key and start_date and end_date:
+#             response = requests.post(
+#                 "http://0.0.0.0:8000/search", 
+#                 json={"key": key, "start_date": start_date, "end_date": end_date}
+#             )
+#             data = response.json()  
+
+#             # Extract transactions from "filtered_transactions" key
+#             transactions = data.get("filtered_transactions", [])
+
+#             if isinstance(transactions, list) and len(transactions) > 0:
+#                 df = pd.DataFrame(transactions)  # Convert JSON to DataFrame
                 
-                # Convert 'Date' to datetime for plotting
-                df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
+#                 # Convert 'Date' to datetime for plotting
+#                 df["Date"] = pd.to_datetime(df["Date"], format="%d-%m-%Y")
 
-                # Show raw data
-                st.subheader("📊 Raw Transaction Data")
-                st.dataframe(df)
+#                 # Show raw data
+#                 st.subheader("📊 Raw Transaction Data")
+#                 st.dataframe(df)
 
-                # 1️⃣ Line Chart: Account Balance Over Time
-                st.subheader("📈 Balance Over Time")
-                fig_balance = px.line(df, x="Date", y="Balance", title="Balance Trend", markers=True)
-                st.plotly_chart(fig_balance)
+#                 # 1️⃣ Line Chart: Account Balance Over Time
+#                 st.subheader("📈 Balance Over Time")
+#                 fig_balance = px.line(df, x="Date", y="Balance", title="Balance Trend", markers=True)
+#                 st.plotly_chart(fig_balance)
 
-                # 2️⃣ Bar Chart: Deposit vs Withdrawal
-                st.subheader("💰 Deposit vs Withdrawal")
-                df["Deposit"] = df["Deposit"].fillna(0)  # Handle NaN values
-                df["Withdrawal"] = df["Withdrawal"].fillna(0)
+#                 # 2️⃣ Bar Chart: Deposit vs Withdrawal
+#                 st.subheader("💰 Deposit vs Withdrawal")
+#                 df["Deposit"] = df["Deposit"].fillna(0)  # Handle NaN values
+#                 df["Withdrawal"] = df["Withdrawal"].fillna(0)
 
-                fig_bar = px.bar(df, x="Date", y=["Deposit", "Withdrawal"], 
-                                 title="Deposits & Withdrawals", 
-                                 barmode="group")
-                st.plotly_chart(fig_bar)
+#                 fig_bar = px.bar(df, x="Date", y=["Deposit", "Withdrawal"], 
+#                                  title="Deposits & Withdrawals", 
+#                                  barmode="group")
+#                 st.plotly_chart(fig_bar)
 
-                # 3️⃣ Area Chart: Cumulative Deposits & Withdrawals
-                st.subheader("📊 Cumulative Deposits & Withdrawals")
-                df["Cumulative Deposit"] = df["Deposit"].cumsum()
-                df["Cumulative Withdrawal"] = df["Withdrawal"].cumsum()
+#                 # 3️⃣ Area Chart: Cumulative Deposits & Withdrawals
+#                 st.subheader("📊 Cumulative Deposits & Withdrawals")
+#                 df["Cumulative Deposit"] = df["Deposit"].cumsum()
+#                 df["Cumulative Withdrawal"] = df["Withdrawal"].cumsum()
 
-                fig_area = px.area(df, x="Date", y=["Cumulative Deposit", "Cumulative Withdrawal"],
-                                   title="Cumulative Deposits vs Withdrawals")
-                st.plotly_chart(fig_area)
+#                 fig_area = px.area(df, x="Date", y=["Cumulative Deposit", "Cumulative Withdrawal"],
+#                                    title="Cumulative Deposits vs Withdrawals")
+#                 st.plotly_chart(fig_area)
 
-                # 4️⃣ Histogram: Transactions Per Day
-                st.subheader("📊 Daily Transaction Count")
-                df["Transaction Count"] = 1  # Each row is a transaction
+#                 # 4️⃣ Histogram: Transactions Per Day
+#                 st.subheader("📊 Daily Transaction Count")
+#                 df["Transaction Count"] = 1  # Each row is a transaction
 
-                fig_hist = px.histogram(df, x="Date", y="Transaction Count", 
-                                        title="Transactions Per Day", nbins=len(df["Date"].unique()))
-                st.plotly_chart(fig_hist)
+#                 fig_hist = px.histogram(df, x="Date", y="Transaction Count", 
+#                                         title="Transactions Per Day", nbins=len(df["Date"].unique()))
+#                 st.plotly_chart(fig_hist)
 
-            else:
-                st.warning("⚠️ No transactions found for the given inputs.")
-        else:
-            st.warning("⚠️ Please fill in all fields before searching.")
+#             else:
+#                 st.warning("⚠️ No transactions found for the given inputs.")
+#         else:
+#             st.warning("⚠️ Please fill in all fields before searching.")
             
-def dynamic_graph_page():
-    st.title("📊 Dynamic Transaction Graphs")
-    st.write("Enter a query to generate a custom graph based on transaction data.")
+# def dynamic_graph_page():
+#     st.title("📊 Dynamic Transaction Graphs")
+#     st.write("Enter a query to generate a custom graph based on transaction data.")
     
-    user_query = st.text_input("Enter your query (e.g., 'show me monthly expenditure trends')")
     
-    if st.button("Generate Graph"):
-        if user_query:
-            dynamic_plotting_agent(user_query)
-        else:
-            st.warning("Please enter a query.")
+#     user_query = st.text_input("Enter your query (e.g., 'show me balance trends')")
+    
+#     if st.button("Generate Graph"):
+#         if user_query:
+#             response = requests.post("http://0.0.0.0:8001/graph", json={"message": user_query})
+#             try:
+#                 data = response.json()
+#             except Exception as e:
+#                 st.error("Error parsing response: " + str(e))
+#                 return
+#             print(data)
+#             if "graph" in data:
+#                 graph_json = data["graph"]
+#                 try:
+#                     # Convert the JSON string back to a Plotly figure.
+#                     fig = pio.from_json(graph_json)
+#                     st.plotly_chart(fig)
+#                 except Exception as e:
+#                     st.error("Error rendering graph: " + str(e))
+#             else:
+#                 st.error("Graph not found in response.")
+#         else:
+#             st.warning("Please enter a query.")
+
 
 
 def main():
     """Main function to handle navigation with sidebar"""
     st.sidebar.title("🔗 Navigation")
-    page = st.sidebar.radio("Go to", ["📂 Upload File", "🔎 Query Transactions","💬 Chat" ,"🔍 Search"])
+    page = st.sidebar.radio("Go to", ["📂 Upload File","💬 Chat"])
 
     if page == "📂 Upload File":
         upload_page()
-    elif page == "🔎 Query Transactions":
-        query_page()
-    elif page == "🔍 Search":
-        search_page()
+    # elif page == "🔎 Query Transactions":
+    #     query_page()
+    # elif page == "🔍 Search":
+    #     search_page()
     elif page == "💬 Chat":
         chat_page()
-    elif page == "📊 Dynamic Graph":
-        dynamic_graph_page()
+    # elif page == "📊 Dynamic Graph":
+    #     dynamic_graph_page()
 
 
 if __name__ == "__main__":
